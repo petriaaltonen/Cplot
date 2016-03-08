@@ -5,13 +5,11 @@
  */
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.util.Formatter;
-import javax.imageio.*;
 
 /**
  *
@@ -117,7 +115,7 @@ public class PlotPanel extends JPanel {
 
                     plot.scan(-deltaX, -deltaY);
 
-                    try { updateImage(); }
+                    try { updateBackgroundImage(); }
                     catch (PlotException ex) { mainWindow.bailOut(ex); }
 
                     repaint();
@@ -182,7 +180,7 @@ public class PlotPanel extends JPanel {
 
                     try {
                         plot.zoom(x1, y1, x2, y2);
-                        updateImage();
+                        updateBackgroundImage();
                         repaint();
                     } catch (PlotException ex) {
                         mainWindow.bailOut(ex);
@@ -192,7 +190,7 @@ public class PlotPanel extends JPanel {
                     isDragging = false;
                     try {
                         plot.postScanUpdate();
-                        updateImage();
+                        updateBackgroundImage();
                     }
                     catch (PlotException ex) { mainWindow.bailOut(ex); }
                     repaint();
@@ -200,11 +198,12 @@ public class PlotPanel extends JPanel {
             }
         });
 
-        // Add callbacks to handle locking the tools.
+        // Add callbacks to handle locking the tools and repainting the component.
         plotRef.addStartCallback(new StartCallback() {
             @Override
             public void callback() {
                 isComputing = true;
+                repaint();
             }
         });
 
@@ -212,9 +211,9 @@ public class PlotPanel extends JPanel {
             @Override
             public void callback() {
                 isComputing = false;
+                repaint();
             }
         });
-
     }
 
     public void enableBox(boolean val) { enabledBox = val; }
@@ -292,7 +291,7 @@ public class PlotPanel extends JPanel {
             }
             else {
                 plot.resize(plotWidth, plotHeight);
-                updateImage();
+                updateBackgroundImage();
             }
         }
         catch (PlotException e) { mainWindow.bailOut(e); }
@@ -582,11 +581,9 @@ public class PlotPanel extends JPanel {
     //
     // Draw a box on the backgroundImage.
     //
-    private void drawBox() throws PlotException {
+    private void drawBox() {
 
-        if (backgroundImage == null)
-            throw new PlotException("'backgroundImage' has not been " +
-                    "initialised.");
+        assert backgroundImage != null;
 
         Graphics2D g = (Graphics2D)backgroundImage.getGraphics();
         g.setColor(new Color(0, 0, 0, 255));
@@ -636,23 +633,12 @@ public class PlotPanel extends JPanel {
     }
 
     //
-    // (Re)create an image.
-    // NOTE: For some very odd reason we can't call updateImage from
-    // PlotPanel.resize if updateImage is called 'createImage'. Apparently
-    // there is a method called createImage somewhere with different number
-    // of arguments messing up the namespace.
+    // Update the backgroundImage.
     //
-    void updateImage() throws PlotException {
-
-        if (plot == null)
-            throw new PlotException("Can't create a plot because "
-                    + "the subcomponent 'plot' has not been initalized.");
+    void updateBackgroundImage() throws PlotException {
 
         if (backgroundImage != null) backgroundImage = null;
-        //if (plotImage != null) plotImage = null;
-
         if (backgroundWidth == 0 || backgroundHeight == 0) return;
-        //if (plotWidth == 0 || plotHeight == 0) return;
 
         backgroundImage = new BufferedImage(backgroundWidth, backgroundHeight,
                 BufferedImage.TYPE_INT_RGB);

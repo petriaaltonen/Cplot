@@ -22,9 +22,8 @@ public class Plot {
     private final int MIN_MATRIX_XSIZE = 50;
     private final int MIN_MATRIX_YSIZE = 50;
 
-    // A matrix of complex numbers.
-    private BufferedImage [] plots = null;
-    private int currentPlot = 0;
+    // An AWT-image
+    private BufferedImage plot = null;
 
     // The plot coordinates
     private PlotCoordinates coordinates = null;
@@ -75,8 +74,6 @@ public class Plot {
 
         this.evaluator = evaluator;
         coordinates = new PlotCoordinates(100, 100);
-        plots = new BufferedImage[2];
-        //resize(300, 300);
     }
 
     /**
@@ -220,25 +217,24 @@ public class Plot {
         progressChangedCallbacks.add(callback);
     }
 
-    //
-    // Compute the 'matrix'.
-    //
+    /**
+     * This is where the actual computation of a new plot takes place. Note that
+     * the computation is performed asynchronously. All registered DoneCallback-instances
+     * will be fired when done.
+     */
     private void computeMatrix() {
+
         // If a previous computation is ongoing, cancel it.
         if (worker != null && !worker.isDone() && !worker.isCancelled())
             worker.cancel(true);
 
-        worker = new PlotWorker(
-                evaluator,
-                activeColoring,
-                coordinates);
+        worker = new PlotWorker(evaluator, activeColoring, coordinates);
 
         worker.addDoneCallback(new DoneCallback() {
             @Override
             public void callback() {
-               // currentPlot = (currentPlot == 0) ? 1 : 0;
                 try {
-                    plots[0] = workerRef.get();
+                    plot = workerRef.get();
                 }
                 catch (InterruptedException ex) {
                     // TODO: Do something about exceptions
@@ -266,7 +262,7 @@ public class Plot {
         worker.execute();
     }
 
-    public BufferedImage getImage() { return plots[0]; }
+    public BufferedImage getImage() { return plot; }
     public PlotCoordinates getCoordinates() { return coordinates; }
     public Complex getComplexValue(int x, int y) {
         return evaluator.evalAt(coordinates.getComplexCoordinates(x, y));

@@ -136,7 +136,7 @@ public class MainWindow extends JFrame {
 					String oldColoring = plot.getColoring();
 					try {
 						plot.setColoring(((JMenuItem) e.getSource()).getText());
-						panel.updateImage();
+						panel.updateBackgroundImage();
 					}
 					catch (PlotException ex) { bailOut(ex); }
 					panel.repaint();
@@ -185,7 +185,7 @@ public class MainWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				panel.enableBox(((JCheckBoxMenuItem)e.getSource()).getState());
-				try { panel.updateImage(); }
+				try { panel.updateBackgroundImage(); }
 				catch (PlotException ex) { bailOut(ex); }
 				panel.repaint();
 			}
@@ -260,7 +260,7 @@ public class MainWindow extends JFrame {
 		getContentPane().add(panel);
 		setVisible(true);
 
-		try { panel.updateImage(); }
+		try { panel.updateBackgroundImage(); }
 		catch (PlotException e) { bailOut(e); }
 
 		// At this point we can query panel to set the radio and check box
@@ -284,7 +284,7 @@ public class MainWindow extends JFrame {
 			plot.setColoring(params.color);
 			plot.resetViewport();
 			plot.setLimits(params.xmin, params.xmax, params.ymin, params.ymax);
-			panel.updateImage();
+			panel.updateBackgroundImage();
 			panel.repaint();
 			coloringItems.get(oldColoring).setEnabled(true);
 			coloringItems.get(params.color).setEnabled(false);
@@ -307,7 +307,7 @@ public class MainWindow extends JFrame {
 
 		try {
 			plot.setLimits(xmin, xmax, ymin, ymax);
-			panel.updateImage();
+			panel.updateBackgroundImage();
 			panel.repaint();
 		}
 		catch (PlotException e) { bailOut(e); }
