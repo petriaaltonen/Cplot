@@ -58,15 +58,10 @@ public class MainWindow extends JFrame {
 		setSize(DEFAULT_XSIZE, DEFAULT_YSIZE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		// Initialise sub-components.
 		parser = new Parser();
 		evaluator = new Evaluator();
-		try {
-			evaluator.setRoot(parser.parseStatement(DEFAULT_EXPRESSION));
-		}
-		catch (ParserException e) {
-			bailOut(e);
-		}
+		try { evaluator.setRoot(parser.parseStatement(DEFAULT_EXPRESSION)); }
+		catch (ParserException e) { bailOut(e); }
 
 		plot = new Plot(evaluator);
 
@@ -151,8 +146,6 @@ public class MainWindow extends JFrame {
 		plotMenu.add(coloringMenu);
 
 		plotMenu.addSeparator();
-
-		// TODO: Set the status of check and radio boxes according to the default values of PlotPanel.
 
 		JMenu leftMouseButtonMenu = new JMenu("Left mouse button action");
 		JRadioButtonMenuItem scanMenuItem = new JRadioButtonMenuItem("Scan");

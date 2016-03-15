@@ -1,18 +1,15 @@
-/*
- * PlotCoordinates.java
- * 10.9.2014
- * Petri Aaltonen
- */
+//
+// PlotCoordinates.java
+// Petri Aaltonen
+//
 
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 
-/**
- *
- * @author petri
- */
+
 public class PlotCoordinates {
+
     private static final double DEF_XMIN = -1.0;
     private static final double DEF_XMAX = 1.0;
     private static final double DEF_YMIN = -1.0;
@@ -26,7 +23,16 @@ public class PlotCoordinates {
     private Rectangle rectMatrix = null;
     private Rectangle2D rectMatrixCmplx = null;
 
+    /**
+     * Initialize the class and set the viewport size.
+     * @param viewPortXsize viewport width
+     * @param viewPortYsize viewport height
+     */
     public PlotCoordinates(int viewPortXsize, int viewPortYsize) {
+
+        assert viewPortXsize > 0;
+        assert viewPortYsize > 0;
+
         rectMatrix = new Rectangle(
                 0,
                 0,
@@ -36,8 +42,8 @@ public class PlotCoordinates {
         rectViewport = new Rectangle(
                 viewPortXsize,
                 viewPortYsize,
-                2*viewPortXsize,
-                2*viewPortYsize);
+                viewPortXsize,
+                viewPortYsize);
 
         rectMatrixCmplx = new Rectangle2D.Double(
                 DEF_XMIN - (DEF_XMAX - DEF_XMIN),
@@ -59,7 +65,7 @@ public class PlotCoordinates {
         deltaY = rectViewportCmplx.height / (double)(rectViewport.height - 1);
     }
 
-    Complex matToCmplx(int x, int y) {
+    public Complex matToCmplx(int x, int y) {
         if (!rectMatrix.contains(x, y)) return null;
         Complex z = new Complex();
         z.x = rectMatrixCmplx.getMinX() + deltaX*x;
@@ -67,7 +73,7 @@ public class PlotCoordinates {
         return z;
     }
 
-    Point cmplxToMat(Complex z) {
+    private Point cmplxToMat(Complex z) {
         Point p = new Point();
         p.x = (int)((z.x - rectMatrixCmplx.getMinX()) / deltaX);
         p.y = (int)((double)(rectMatrix.height - 1)
@@ -89,37 +95,37 @@ public class PlotCoordinates {
     public int getMatrixHeight() { return rectMatrix.height; }
     public int getLeft() { return rectViewport.x; }
     public int getTop() { return rectViewport.y; }
-    public int getRight() { return (rectViewport.x + rectViewport.width); }
-    public int getBottom() { return (rectViewport.y + rectViewport.height); }
+    public int getRight() { return (rectViewport.x + rectViewport.width - 1); }
+    public int getBottom() { return (rectViewport.y + rectViewport.height - 1); }
 
     /**
-     * Given a point (x,y) inside the viewport of the matrix return the complex
-     * coordinates of the point (x,y).
+     * Transform viewport integer coordinates to complex coordinates.
      *
-     * @param x the x-coordinate
-     * @param y the y-coordinate
+     * @param x the integer x-coordinate
+     * @param y the integer y-coordinate
      * @return the complex coordinates
      */
     public Complex getComplexCoordinates(int x, int y) {
-        x += rectViewport.x;
-        y += rectViewport.y;
-        if (!rectViewport.contains(x, y)) return null;
-        return matToCmplx(x, y);
+        if (x < 0 || x >= getViewportWidth() || y < 0 || y >= getViewportHeight()) return null;
+        return new Complex(getXmin() + deltaX*x, getYmin() + deltaY*(getViewportHeight() - y - 1));
     }
 
     /**
-     * Given complex coordinates z inside the viewport of the matrix return the
-     * the point (x,y) representing the integer coordinates of a point inside the
-     * matrix viewport.
+     * Transform complex coordinates to integer viewport coordinates.
      *
-     * @param z the complex coordinates 
-     * @return the integer coordinates
+     * @param z the complex coordinates
+     * @return the integer viewport coordinates
      */
     public Point getMatrixIndex(Complex z) {
-        Complex w = new Complex(z);
-        Point p = cmplxToMat(w);
-        p.x -= rectViewport.x;
-        p.y -= rectViewport.y;
+        if (z.x < getXmin() || z.x > getXmax() || z.y < getYmin() || z.y > getYmax()) return null;
+        Point p = new Point();
+        p.x = (int)Math.round((z.x - getXmin()) / deltaX);
+        p.y = (int)Math.round((double)(getViewportHeight() - 1)
+                - (z.y - getYmin())/deltaY);
+        if (p.x == -1) p.x = 0;
+        if (p.y == getViewportWidth()) p.x = getViewportWidth() - 1;
+        if (p.y == -1) p.y = 0;
+        if (p.y == getViewportHeight()) p.y = getViewportHeight() - 1;
         return p;
     }
 

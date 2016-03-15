@@ -73,8 +73,8 @@ public class PlotPanel extends JPanel {
         plot = plotRef;
         mainWindow = mainRef;
 
-        computePlotSize();
-        plot.resize(plotWidth, plotHeight);
+        // computePlotSize();
+        // plot.resize(plotWidth, plotHeight);
 
         //
         // Handle resize events.
