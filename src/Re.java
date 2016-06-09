@@ -10,10 +10,8 @@
  *
  */
 public class Re extends Function {
-
     @Override
     public Complex eval(Complex z) {
 	return new Complex(z.x, 0.0);
     }
-
 }

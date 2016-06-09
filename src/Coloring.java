@@ -25,8 +25,6 @@ public abstract class Coloring {
     }
     
     public abstract String getName();
-    public abstract boolean isConfigurable();
-    public void configure() {}
     public abstract Color getColor(Complex z);
     
 }

@@ -30,28 +30,40 @@ public class MainWindow extends JFrame {
 	// Menu items for choosing coloring.
 	private HashMap<String, JMenuItem> coloringItems = null;
 
-	//
-	// Fatal error, bail out.
-	//
+	// Sub components for the PlotPanel and a FileChooser
+	private PlotPanel panel = null;
+	JFileChooser fileChooser = null;
+
+	/**
+	 * The program has encountered a fatal error which it cannot recover from. Show an error
+	 * message in a message dialog box and print the same message in the standard output
+	 * stream. Then close the program.
+	 *
+	 * @param e exception which caused the fatal error (can be null)
+     */
 	protected void bailOut(Exception e) {
-		String msg = "Complex plot encountered a fatal error and can not continue "
-				+ "running.\nException: "
-				+ e.toString()
-				+ "\nMessage: "
-				+ e.getMessage();
+		String msg;
+
+		if (e != null) {
+			msg = new String("Complex plot encountered a fatal error and can not continue "
+					+ "running.\nException: "
+					+ e.toString()
+					+ "\nMessage: "
+					+ e.getMessage());
+		}
+		else {
+			msg = new String("Complex plot encountered a fatal error and can not continue running.");
+		}
+
 		JOptionPane.showMessageDialog(this, msg, "Fatal error",
 				JOptionPane.ERROR_MESSAGE);
 		System.out.println(msg);
 		System.exit(-1);
 	}
 
-	private PlotPanel panel = null;
-	JFileChooser fileChooser = null;
-
-	//
-	// Constructor initialises the components parser, evaluator
-	// and plot.
-	//
+	/**
+	 * Constructor initializes all sub components.
+	 */
 	public MainWindow() {
 
 		super("Complex plot");
@@ -150,8 +162,6 @@ public class MainWindow extends JFrame {
 		JMenu leftMouseButtonMenu = new JMenu("Left mouse button action");
 		JRadioButtonMenuItem scanMenuItem = new JRadioButtonMenuItem("Scan");
 		JRadioButtonMenuItem zoomMenuItem = new JRadioButtonMenuItem("Zoom");
-		//scanMenuItem.setEnabled(panel.getDraggingTool().equals(PlotPanel.DraggingTool.SCAN));
-		//zoomMenuItem.setEnabled(panel.getDraggingTool().equals(PlotPanel.DraggingTool.ZOOM));
 		ButtonGroup buttonGroup = new ButtonGroup();
 		buttonGroup.add(scanMenuItem);
 		buttonGroup.add(zoomMenuItem);
@@ -264,9 +274,11 @@ public class MainWindow extends JFrame {
 		toolTipItem.setSelected(panel.isToolTipEnabled());
 	}
 
-	//
-	// Make a new plot.
-	//
+	/**
+	 * Make a new plot.
+	 *
+	 * @param params parameters for the new plot
+     */
 	protected void plot(PlotParams params) {
 		assert params.xmin < params.xmax : "xmin >= xmax";
 		assert params.ymin < params.ymax : "ymin >= ymax";
@@ -291,9 +303,14 @@ public class MainWindow extends JFrame {
 		}
 	}
 
-	//
-	// Set new limits for the plot and recreate the plot.
-	//
+	/**
+	 * Set the limits for the plot.
+	 *
+	 * @param xmin
+	 * @param xmax
+	 * @param ymin
+     * @param ymax
+     */
 	public void setLimits(double xmin, double xmax, double ymin, double ymax) {
 		assert xmin < xmax : "xmin >= xmax";
 		assert ymin < ymax : "ymin >= ymax";
@@ -303,12 +320,16 @@ public class MainWindow extends JFrame {
 			panel.updateBackgroundImage();
 			panel.repaint();
 		}
-		catch (PlotException e) { bailOut(e); }
+		catch (PlotException e) {
+			bailOut(e);
+		}
 	}
 
-	//
-	// main-function
-	//
+	/**
+	 * The main function
+	 *
+	 * @param args not used
+     */
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {

@@ -21,33 +21,6 @@ public class Parser {
 		VAR, FCN, VAL, NEG, ADD, SUB, MUL, DIV, POW, LPAR, RPAR, UNKNOWN_MINUS, UNKNOWN_NAME
 	}
 
-	//
-	// Determine the group a token of type 'type' belongs.
-	//
-//	private static TokenGroup getTokenGroup(TokenType type) {
-//		switch (type) {
-//			case VAR:
-//			case FCN:
-//			case UNKNOWN_NAME:
-//				return TokenGroup.NAME;
-//			case VAL:
-//				return TokenGroup.VALUE;
-//			case NEG:
-//			case ADD:
-//			case SUB:
-//			case MUL:
-//			case DIV:
-//			case POW:
-//				return TokenGroup.OPERATOR;
-//			case LPAR:
-//			case RPAR:
-//				return TokenGroup.PARENTHESIS;
-//			default: // This is a programming error!
-//				assert false : "Unexpected enum value in getTokenGroup";
-//				throw new Error("Unexpected enum value");
-//		}
-//	}
-
 	private static class Token {
 
 		TokenGroup group = null;
@@ -193,18 +166,6 @@ public class Parser {
 		else
 			return false;
 	}
-
-	//
-	// Return true if a character is a special character, ie. '+', '-',
-	// '*', '/', '^', '(' or ')';
-	//
-//	private static boolean isSpecialCharacter(char c) {
-//		if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^'
-//				|| c == '(' || c == ')')
-//			return true;
-//		else
-//			return false;
-//	}
 
 	//
 	// Assuming that 'statement' begins with an alphabet or the underscore at

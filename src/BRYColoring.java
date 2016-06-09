@@ -19,9 +19,6 @@ public class BRYColoring extends Coloring {
     public String getName() { return new String(name); }
 
     @Override
-    public boolean isConfigurable() { return false; }
-
-    @Override
     public Color getColor(Complex z) {
         double h = Complex.arg2(z) / 6.0;
         double b = 1.0;

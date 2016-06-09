@@ -25,6 +25,11 @@ public class NewPlotWindow extends JFrame {
 	MainWindow mainWindow;
 	Plot plot;
 
+	/**
+	 * Create a new window for querying parameters to create a new plot.
+	 * @param mainRef reference to a MainWindow-instance
+	 * @param plotRef reference to a Plot-instance
+     */
 	public NewPlotWindow(MainWindow mainRef, Plot plotRef) {
 		super("New complex plot");
 		setSize(DEFAULT_XSIZE, DEFAULT_YSIZE);

@@ -214,7 +214,6 @@ public class Evaluator {
 
 	/**
 	 * Attach the Evaluator an eval-tree root.
-	 *
 	 * @param root An EvalNode-object which is supposed to be a root of an eval-tree.
 	 */
 	public void setRoot(EvalNode root) {
@@ -224,7 +223,6 @@ public class Evaluator {
 
 	/**
 	 * Evaluates the eval-tree at complex point z.
-	 *
 	 * @param z A complex number
 	 * @return The result of the evaluation
 	 */

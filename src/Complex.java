@@ -17,17 +17,33 @@ public class Complex {
     public double x = 0.0;
     public double y = 0.0;
 
+    /**
+     * Constructor which sets the complex number to 0.
+     */
     public Complex() {}
 
+    /**
+     * Constructor which creates a real number, ie. sets the imaginary part to 0.
+     * @param x the real part
+     */
     public Complex(double x) {
         this.x = x;
     }
 
+    /**
+     * Constructor
+     * @param x the real part
+     * @param y the imaginary part
+     */
     public Complex(double x, double y) {
         this.x = x;
         this.y = y;
     }
 
+    /**
+     * A copy constructor
+     * @param z another complex number
+     */
     public Complex(Complex z) {
         this.x = z.x;
         this.y = z.y;
@@ -46,7 +62,7 @@ public class Complex {
     }
 
     /**
-     *
+     * Return the absolute value of a complex number.
      * @param z a complex number
      * @return the absolute value of the complex number z
      */
@@ -55,27 +71,16 @@ public class Complex {
     }
 
     /**
-     * Argument of the complex number z is the angle the line segment drawn from the
-     * origin of the complex plane to the point z form relative to the positive
-     * real axis. The argument is defined in the range from -PI to PI.
-     *
+     * Argument of the complex number in the range from -PI to PI.
      * @param z a complex number
      * @return the argument of the complex number z
      */
     public static double arg(Complex z) {
-	/*double t = Math.atan2(z.y, z.x);
-	if (t >= 0.0)
-	    return t;
-	else
-	    return (2.0 * Math.PI + t);*/
         return Math.atan2(z.y, z.x);
     }
 
     /**
-     * Argument of the complex number z is the angle the line segment drawn from the
-     * origin of the complex plane to the point z form relative to the positive
-     * real axis. The argument is defined in the range from 0 to 2*PI.
-     *
+     * Argument of the complex number in the range from 0 to 2*PI.
      * @param z a complex number
      * @return the argument of the complex number z
      */
@@ -86,7 +91,7 @@ public class Complex {
     }
 
     /**
-     *
+     * Return the complex conjugate of the complex number z.
      * @param z a complex number
      * @return the complex conjugate of z
      */
@@ -95,7 +100,7 @@ public class Complex {
     }
 
     /**
-     *
+     * Return the opposite value of the complex number z.
      * @param z a complex number
      * @return the opposite number of the the complex number z 
      */
@@ -104,7 +109,7 @@ public class Complex {
     }
 
     /**
-     *
+     * Return the sum of two complex numbers.
      * @param z a complex number
      * @param w a complex number
      * @return  a new complex number z + w
@@ -114,7 +119,7 @@ public class Complex {
     }
 
     /**
-     *
+     * Return the difference of two complex numbers.
      * @param z a complex number
      * @param w a complex number
      * @return  a new complex number z - w
@@ -124,7 +129,7 @@ public class Complex {
     }
 
     /**
-     *
+     * Return the product of two complex numbers.
      * @param z a complex number
      * @param w a complex number
      * @return  a new complex number z * w
@@ -134,7 +139,7 @@ public class Complex {
     }
 
     /**
-     *
+     * Return the quotient of two complex numbers.
      * @param z a complex number
      * @param w a complex number
      * @return  a new complex number z / w
@@ -145,7 +150,7 @@ public class Complex {
     }
 
     /**
-     *
+     * Return the complex power z^w.
      * @param z the base
      * @param w the exponent
      * @return the complex number z^w
@@ -155,7 +160,7 @@ public class Complex {
     }
 
     /**
-     *
+     * Return the complex exponential function exp(z).
      * @param z a complex number
      * @return result of the computation exp(z)
      */
@@ -164,7 +169,7 @@ public class Complex {
     }
 
     /**
-     *
+     * Return the complex logarithm log(z).
      * @param z a complex number
      * @return result of the computation log(z)
      */
@@ -174,7 +179,7 @@ public class Complex {
     }
 
     /**
-     *
+     * Return the complex square root.
      * @param z a complex number
      * @return result of the computation sqrt(z)
      */
@@ -188,7 +193,7 @@ public class Complex {
     }
 
     /**
-     *
+     * Return the complex sine.
      * @param z a complex number
      * @return result of the computation sin(z)
      */
@@ -198,7 +203,7 @@ public class Complex {
     }
 
     /**
-     *
+     * Return the complex cosine.
      * @param z a complex number
      * @return result of the computation cos(z)
      */
@@ -208,7 +213,7 @@ public class Complex {
     }
 
     /**
-     *
+     * Return the complex tangent.
      * @param z a complex number
      * @return result of the computation tan(z)
      */

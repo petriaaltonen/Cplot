@@ -15,6 +15,9 @@ public class FunctionTable {
 
 	HashMap<String, Function> map = null;
 
+	/**
+	 * Create a new function table and populate it with all known functions.
+	 */
 	public FunctionTable() {
 		try {
 			map = new HashMap<String, Function>(32);
