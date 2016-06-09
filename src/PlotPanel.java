@@ -319,12 +319,17 @@ public class PlotPanel extends JPanel {
             y2 += BOX_CLEARANCE;
         }
 
-        int xPos, yPos;
+        int xPos = 0, yPos = 0;
 
         if (isDragging && draggingTool == DraggingTool.SCAN) {
             Point point = plot.getCoordinates().getMatrixIndex(scanZ0);
-            xPos = point.x + plotLeft;
-            yPos = point.y + plotTop;
+            if (point != null) {
+                xPos = point.x + plotLeft;
+                yPos = point.y + plotTop;
+            }
+            else {
+                return;
+            }
         }
         else {
             xPos = mouseXPos;
@@ -360,8 +365,13 @@ public class PlotPanel extends JPanel {
 
         if (isDragging && draggingTool == DraggingTool.SCAN) {
             Point point = plot.getCoordinates().getMatrixIndex(scanZ0);
-            xPos = point.x + plotLeft;
-            yPos = point.y + plotTop;
+            if (point != null) {
+                xPos = point.x + plotLeft;
+                yPos = point.y + plotTop;
+            }
+            else {
+                return;
+            }
         }
         else {
             xPos = mouseXPos;
