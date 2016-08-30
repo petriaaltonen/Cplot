@@ -34,52 +34,52 @@ public class ParserTest {
     //
 
     @Test (expected = ParserException.class)
-    public void testInvalid1() throws Exception {
+    public void testInvalidOnlyAddOp() throws Exception {
         parser.parseStatement("+");
     }
 
     @Test (expected = ParserException.class)
-    public void testInvalid2() throws Exception {
+    public void testInvalidOnlySubOp() throws Exception {
         parser.parseStatement("-");
     }
 
     @Test (expected = ParserException.class)
-    public void testInvalid3() throws Exception {
+    public void testInvalidNoSecondArgToAdd() throws Exception {
         parser.parseStatement("1+");
     }
 
     @Test (expected = ParserException.class)
-    public void testInvalid4() throws Exception {
+    public void testInvalidNoSecondArgToSub() throws Exception {
         parser.parseStatement("1-");
     }
 
     @Test (expected = ParserException.class)
-    public void testInvalid5() throws Exception {
+    public void testInvalidNoSecondArgToSubAfterGoodSubExpression() throws Exception {
         parser.parseStatement("1+1-");
     }
 
     @Test (expected = ParserException.class)
-    public void testInvalid6() throws Exception {
+    public void testInvalidNoSecondArgToAddAfterVariableName() throws Exception {
         parser.parseStatement("z+");
     }
 
     @Test (expected = ParserException.class)
-    public void testInvalid7() throws Exception {
+    public void testInvalidExpressionStartsWithRightParen() throws Exception {
         parser.parseStatement(")*7");
     }
 
     @Test (expected = ParserException.class)
-    public void testInvalid8() throws Exception {
+    public void testInvalidFunctionParamParensWrongWay() throws Exception {
         parser.parseStatement("sin)1(");
     }
 
     @Test (expected = ParserException.class)
-    public void testInvalid9() throws Exception {
+    public void testInvalidEmptyParens() throws Exception {
         parser.parseStatement("1*()");
     }
 
     @Test (expected = ParserException.class)
-    public void testInvalid10() throws Exception {
+    public void testInvalidParensAfterValue() throws Exception {
         parser.parseStatement("1()+5");
     }
 
@@ -88,48 +88,43 @@ public class ParserTest {
     //
 
     @Test (expected = ParserException.class)
-    public void testInvalidNumber1() throws Exception {
+    public void testInvalidNumberNoDigitsAfterDot() throws Exception {
         parser.parseStatement("1.");
     }
 
     @Test (expected = ParserException.class)
-    public void testInvalidNumber2() throws Exception {
+    public void testInvalidNumberEAfterDot() throws Exception {
         parser.parseStatement("1.e");
     }
 
     @Test (expected = ParserException.class)
-    public void testInvalidNumber3() throws Exception {
+    public void testInvalidNumberNoDigitsAfterE() throws Exception {
         parser.parseStatement("1.0e");
     }
 
     @Test (expected = ParserException.class)
-    public void testInvalidNumber4() throws Exception {
+    public void testInvalidNumberNoDigitsBetweenDotAndE() throws Exception {
         parser.parseStatement("1.e5");
     }
 
     @Test (expected = ParserException.class)
-    public void testInvalidNumber5() throws Exception {
+    public void testInvalidNumberNoDigitsAfterEAndPlus() throws Exception {
         parser.parseStatement("1.e+");
     }
 
     @Test (expected = ParserException.class)
-    public void testInvalidNumber6() throws Exception {
+    public void testInvalidNumberNoDigitsAfterEAndMinus() throws Exception {
         parser.parseStatement("1.e-");
     }
 
     @Test (expected = ParserException.class)
-    public void testInvalidNumber7() throws Exception {
+    public void testInvalidNumberAdditionalDotAfterExponentPart() throws Exception {
         parser.parseStatement("1.e-5.");
     }
 
     @Test (expected = ParserException.class)
-    public void testInvalidNumber8() throws Exception {
+    public void testInvalidNumberNoDigitBeforeDot() throws Exception {
         parser.parseStatement(".1");
-    }
-
-    @Test (expected = ParserException.class)
-    public void testInvalidNumber9() throws Exception {
-        parser.parseStatement("1.e");
     }
 
     //
@@ -142,37 +137,37 @@ public class ParserTest {
     }
 
     @Test
-    public void testValidNumber2() throws Exception {
+    public void testValidNumber1Dot0() throws Exception {
         assertTrue(parser.parseStatement("1.0") != null);
     }
 
     @Test
-    public void testValidNumber3() throws Exception {
+    public void testValidNumber1Dot0E5() throws Exception {
         assertTrue(parser.parseStatement("1.0e5") != null);
     }
 
     @Test
-    public void testValidNumber4() throws Exception {
+    public void testValidNumber1Dot0EMinus5() throws Exception {
         assertTrue(parser.parseStatement("1.0e-5") != null);
     }
 
     @Test
-    public void testValidNumber5() throws Exception {
+    public void testValidNumber1E5() throws Exception {
         assertTrue(parser.parseStatement("1e5") != null);
     }
 
     @Test
-    public void testValidNumber6() throws Exception {
+    public void testValidNumber1EMinus5() throws Exception {
         assertTrue(parser.parseStatement("1e-5") != null);
     }
 
     @Test
-    public void testValidNumber7() throws Exception {
+    public void testValidNumber1234Dot567E89() throws Exception {
         assertTrue(parser.parseStatement("1234.567e89") != null);
     }
 
     @Test
-    public void testValidNumber8() throws Exception {
+    public void testValidNumber1234Dot567EMinus89() throws Exception {
         assertTrue(parser.parseStatement("1234.567e-89") != null);
     }
 
@@ -181,27 +176,27 @@ public class ParserTest {
     //
 
     @Test (expected = ParserException.class)
-    public void testInvalidPar1() throws Exception {
+    public void testInvalidParSingleLeftParen() throws Exception {
         parser.parseStatement("(1");
     }
 
     @Test (expected = ParserException.class)
-    public void testInvalidPar2() throws Exception {
+    public void testInvalidParSingleRightParen() throws Exception {
         parser.parseStatement("1)");
     }
 
     @Test (expected = ParserException.class)
-    public void testInvalidPar3() throws Exception {
+    public void testInvalidParTwoLeftParensOneRightParen() throws Exception {
         parser.parseStatement("((1)");
     }
 
     @Test (expected = ParserException.class)
-    public void testInvalidPar4() throws Exception {
+    public void testInvalidParOneLeftParenTwoRightParens() throws Exception {
         parser.parseStatement("(1))");
     }
 
     @Test (expected = ParserException.class)
-    public void testInvalidPar5() throws Exception {
+    public void testInvalidParThreeLeftParensFourRightParens() throws Exception {
         parser.parseStatement("((1))+(2))");
     }
 
@@ -210,17 +205,17 @@ public class ParserTest {
     //
 
     @Test
-    public void testValidPar1() throws Exception {
+    public void testValidParOneParens() throws Exception {
         assertTrue(parser.parseStatement("(1)") != null);
     }
 
     @Test
-    public void testValidPar2() throws Exception {
+    public void testValidParTwoParens() throws Exception {
         assertTrue(parser.parseStatement("(1)*(1-4)") != null);
     }
 
     @Test
-    public void testValidPar3() throws Exception {
+    public void testValidParManyNestedParens() throws Exception {
         assertTrue(parser.parseStatement("(((((1)*2)*3)*4)*5)") != null);
     }
 
@@ -229,44 +224,44 @@ public class ParserTest {
     //
 
     @Test
-    public void testOp1() throws Exception {
+    public void testParsesToNegOp() throws Exception {
         Evaluator.EvalNode root = parser.parseStatement("-1");
         assertTrue(root.getClass() == Evaluator.EvalNodeNeg.class);
     }
 
     @Test
-    public void testOp2() throws Exception {
+    public void testParsesToSubOp() throws Exception {
         Evaluator.EvalNode root = parser.parseStatement("x-y");
         assertTrue(root.getClass() == Evaluator.EvalNodeSub.class);
     }
 
     @Test (expected = ParserException.class)
-    public void testOp3() throws Exception {
+    public void testMulOpHasNoLeftOperand() throws Exception {
         parser.parseStatement("*1");
     }
 
     @Test (expected = ParserException.class)
-    public void testOp4() throws Exception {
+    public void testDivOpHasNoLeftOperand() throws Exception {
         parser.parseStatement("/1");
     }
 
     @Test
-    public void testOp5() throws Exception {
+    public void testValidExpressionWithAddOp() throws Exception {
         assertTrue(parser.parseStatement("1+3") != null);
     }
 
     @Test
-    public void testOp6() throws Exception {
+    public void testValidExpressionWithSubOp() throws Exception {
         assertTrue(parser.parseStatement("1-2") != null);
     }
 
     @Test
-    public void testOp7() throws Exception {
+    public void testValidExpressionWithMulOp() throws Exception {
         assertTrue(parser.parseStatement("1*7") != null);
     }
 
     @Test
-    public void testOp8() throws Exception {
+    public void testValidExpressionWithDivOp() throws Exception {
         assertTrue(parser.parseStatement("1/100") != null);
     }
 
@@ -275,19 +270,19 @@ public class ParserTest {
     //
 
     @Test
-    public void testFunc1() throws Exception {
+    public void testSinParsesToVariable() throws Exception {
         Evaluator.EvalNode root = parser.parseStatement("sin");
         assertTrue(root.getClass() == Evaluator.EvalNodeVar.class);
     }
 
     @Test
-    public void testFunc2() throws Exception {
+    public void testSinParsesToFunctionValueAsParam() throws Exception {
         Evaluator.EvalNode root = parser.parseStatement("sin(1)");
         assertTrue(root.getClass() == Evaluator.EvalNodeFcn.class);
     }
 
     @Test
-    public void testFunc3() throws Exception {
+    public void testSinParsesToFunctionComplexExpressionAsParam() throws Exception {
         Evaluator.EvalNode root = parser.parseStatement("sin(1+1)");
         assertTrue(root.getClass() == Evaluator.EvalNodeFcn.class);
     }

@@ -2,6 +2,8 @@
  * MainWindow.java
  * 5.3.2014
  * Petri Aaltonen
+ *
+ * TODO: A bug in saving an image. Exception was thrown.
  */
 
 import java.io.*;
