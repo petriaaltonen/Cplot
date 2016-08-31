@@ -36,6 +36,24 @@ public class MainWindow extends JFrame {
 	private PlotPanel panel = null;
 	JFileChooser fileChooser = null;
 
+	// Menu items
+	private JMenuBar menuBar;
+	private JMenu fileMenu;
+	private JMenuItem saveItem;
+	private JMenuItem exitItem;
+	private JMenu plotMenu;
+	private JMenuItem newPlot;
+	private JMenuItem limitsItem;
+	private JMenu coloringMenu;
+	private JMenu leftMouseButtonMenu;
+	private JRadioButtonMenuItem scanMenuItem;
+	private JRadioButtonMenuItem zoomMenuItem;
+	private JCheckBoxMenuItem boxItem;
+	private JCheckBoxMenuItem crosshairItem;
+	private JCheckBoxMenuItem toolTipItem;
+	private JMenu helpMenu;
+	private JMenuItem aboutItem;
+
 	/**
 	 * The program has encountered a fatal error which it cannot recover from. Show an error
 	 * message in a message dialog box and print the same message in the standard output
@@ -83,76 +101,60 @@ public class MainWindow extends JFrame {
 		fileChooser = new JFileChooser();
 
 		// Create the menu
-		JMenuBar menuBar = new JMenuBar();
+		createMenu();
+		createStatusBar();
 
-		JMenu fileMenu = new JMenu("File");
-		JMenuItem saveItem = new JMenuItem("Save");
-		saveItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				int tmp = fileChooser.showSaveDialog(MainWindow.this);
-				if (tmp == JFileChooser.APPROVE_OPTION) {
-					try {
-						File file = fileChooser.getSelectedFile();
-						ImageIO.write(panel.plotImage, "png", file);
-					}
-					catch (IOException e) {
-						// TODO: do something
-					}
-				}
-			}
-		});
+		// Create a new layout for the MainWindow.
+		getContentPane().setLayout(new BorderLayout());
+
+		// Add a status bar
+		createStatusBar();
+
+		// Add a new plot panel
+		panel = new PlotPanel(this, plot);
+		getContentPane().add(panel);
+		setVisible(true);
+
+		try { panel.updateBackgroundImage(); }
+		catch (PlotException e) { bailOut(e); }
+
+		// At this point we can query panel to set the radio and check box
+		// menu items to default values.
+		scanMenuItem.setSelected(panel.getDraggingTool() == PlotPanel.DraggingTool.SCAN);
+		boxItem.setSelected(panel.isBoxEnabled());
+		crosshairItem.setSelected(panel.isCrosshairEnabled());
+		toolTipItem.setSelected(panel.isToolTipEnabled());
+	}
+
+	private void createMenu() {
+
+		menuBar = new JMenuBar();
+
+		fileMenu = new JMenu("File");
+		saveItem = new JMenuItem("Save");
+		saveItem.addActionListener(event -> onSaveMenuItemClick());
 		fileMenu.add(saveItem);
 
-		JMenuItem exitItem = new JMenuItem("Exit");
-		exitItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
-			}
-		});
+		exitItem = new JMenuItem("Exit");
+		exitItem.addActionListener(event -> onExitMenuItemClick());
 		fileMenu.add(exitItem);
 
-		JMenu plotMenu = new JMenu("Plot");
-		JMenuItem newPlot = new JMenuItem("Create new plot");
-		newPlot.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				NewPlotWindow plotWindow = new NewPlotWindow(MainWindow.this, plot);
-			}
-		});
+		plotMenu = new JMenu("Plot");
+		newPlot = new JMenuItem("Create new plot");
+		newPlot.addActionListener(event -> onNewPlotMenuItemClick());
 		plotMenu.add(newPlot);
 
-		JMenuItem limitsItem = new JMenuItem("Set limits");
-		limitsItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SetLimitsWindow limitsWindow = new SetLimitsWindow(
-						MainWindow.this);
-			}
-		});
+		limitsItem = new JMenuItem("Set limits");
+		limitsItem.addActionListener(event -> onSetLimitsMenuItemClick());
 		plotMenu.add(limitsItem);
 
-		JMenu coloringMenu = new JMenu("Coloring");
+		coloringMenu = new JMenu("Coloring");
 		String [] coloringNames = plot.listColoring();
 		coloringItems = new HashMap<String, JMenuItem>(2*coloringNames.length);
 		for (int i = 0; i < coloringNames.length; i++) {
 			JMenuItem item = new JMenuItem(coloringNames[i]);
 			coloringItems.put(coloringNames[i], item);
-			item.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					String oldColoring = plot.getColoring();
-					try {
-						plot.setColoring(((JMenuItem) e.getSource()).getText());
-						panel.updateBackgroundImage();
-					}
-					catch (PlotException ex) { bailOut(ex); }
-					panel.repaint();
-					coloringItems.get(oldColoring).setEnabled(true);
-					((JMenuItem) e.getSource()).setEnabled(false);
-				}
-			});
+			item.addActionListener(event -> onColoringMenuItemClick(event));
 			item.setEnabled(true);
 			coloringMenu.add(item);
 		}
@@ -161,67 +163,35 @@ public class MainWindow extends JFrame {
 
 		plotMenu.addSeparator();
 
-		JMenu leftMouseButtonMenu = new JMenu("Left mouse button action");
-		JRadioButtonMenuItem scanMenuItem = new JRadioButtonMenuItem("Scan");
-		JRadioButtonMenuItem zoomMenuItem = new JRadioButtonMenuItem("Zoom");
+		leftMouseButtonMenu = new JMenu("Left mouse button action");
+		scanMenuItem = new JRadioButtonMenuItem("Scan");
+		zoomMenuItem = new JRadioButtonMenuItem("Zoom");
 		ButtonGroup buttonGroup = new ButtonGroup();
 		buttonGroup.add(scanMenuItem);
 		buttonGroup.add(zoomMenuItem);
-		scanMenuItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				((JRadioButtonMenuItem)e.getSource()).setSelected(true);
-				panel.setDraggingTool(PlotPanel.DraggingTool.SCAN);
-			}
-		});
-		zoomMenuItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				((JRadioButtonMenuItem)e.getSource()).setSelected(true);
-				panel.setDraggingTool(PlotPanel.DraggingTool.ZOOM);
-			}
-		});
+		scanMenuItem.addActionListener(event -> onScanMenuItemClick(event));
+		zoomMenuItem.addActionListener(event -> onZoomMenuItemClick(event));
 		leftMouseButtonMenu.add(scanMenuItem);
 		leftMouseButtonMenu.add(zoomMenuItem);
 		plotMenu.add(leftMouseButtonMenu);
 
-		JCheckBoxMenuItem boxItem = new JCheckBoxMenuItem("Enable box");
-		boxItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				panel.enableBox(((JCheckBoxMenuItem)e.getSource()).getState());
-				try { panel.updateBackgroundImage(); }
-				catch (PlotException ex) { bailOut(ex); }
-				panel.repaint();
-			}
-		});
+		boxItem = new JCheckBoxMenuItem("Enable box");
+		boxItem.addActionListener(event -> onBoxMenuItemClick(event));
 		boxItem.setState(true);
 		plotMenu.add(boxItem);
 
-		JCheckBoxMenuItem crosshairItem = new JCheckBoxMenuItem("Enable crosshair");
-		crosshairItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				panel.enableCrosshair(((JCheckBoxMenuItem)e.getSource()).getState());
-				panel.repaint();
-			}
-		});
+		crosshairItem = new JCheckBoxMenuItem("Enable crosshair");
+		crosshairItem.addActionListener(event -> onCrosshairMenuItemClick(event));
 		crosshairItem.setState(true);
 		plotMenu.add(crosshairItem);
 
-		JCheckBoxMenuItem toolTipItem = new JCheckBoxMenuItem("Enable tooltip");
-		toolTipItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				panel.enableToolTip(((JCheckBoxMenuItem)e.getSource()).getState());
-				panel.repaint();
-			}
-		});
+		toolTipItem = new JCheckBoxMenuItem("Enable tooltip");
+		toolTipItem.addActionListener(event -> onToolTipMenuItemClick(event));
 		toolTipItem.setState(true);
 		plotMenu.add(toolTipItem);
 
-		JMenu helpMenu = new JMenu("Help");
-		JMenuItem aboutItem = new JMenuItem("About");
+		helpMenu = new JMenu("Help");
+		aboutItem = new JMenuItem("About");
 		helpMenu.add(aboutItem);
 
 		menuBar.add(fileMenu);
@@ -229,11 +199,10 @@ public class MainWindow extends JFrame {
 		menuBar.add(helpMenu);
 
 		setJMenuBar(menuBar);
+	}
 
-		// Create a new layout for the MainWindow.
-		getContentPane().setLayout(new BorderLayout());
+	private void createStatusBar() {
 
-		// Add a status bar
 		StatusBar statusBar = new StatusBar();
 		getContentPane().add(statusBar, BorderLayout.SOUTH);
 		statusBar.setExpression(DEFAULT_EXPRESSION);
@@ -259,21 +228,70 @@ public class MainWindow extends JFrame {
 				statusBar.setProgressBarVisibility(false);
 			}
 		});
+	}
 
-		// Add a new plot panel
-		panel = new PlotPanel(this, plot);
-		getContentPane().add(panel);
-		setVisible(true);
+	private void onSaveMenuItemClick() {
+		int tmp = fileChooser.showSaveDialog(MainWindow.this);
+		if (tmp == JFileChooser.APPROVE_OPTION) {
+			try {
+				File file = fileChooser.getSelectedFile();
+				ImageIO.write(panel.plotImage, "png", file);
+			}
+			catch (IOException e) {
+				// TODO: do something
+			}
+		}
+	}
 
+	private void onExitMenuItemClick() {
+		System.exit(0);
+	}
+
+	private void onNewPlotMenuItemClick() {
+		NewPlotWindow plotWindow = new NewPlotWindow(MainWindow.this, plot);
+	}
+
+	private void onSetLimitsMenuItemClick() {
+		SetLimitsWindow limitsWindow = new SetLimitsWindow(MainWindow.this);
+	}
+
+	private void onColoringMenuItemClick(ActionEvent e) {
+		String oldColoring = plot.getColoring();
+		try {
+			plot.setColoring(((JMenuItem) e.getSource()).getText());
+			panel.updateBackgroundImage();
+		}
+		catch (PlotException ex) { bailOut(ex); }
+		panel.repaint();
+		coloringItems.get(oldColoring).setEnabled(true);
+		((JMenuItem) e.getSource()).setEnabled(false);
+	}
+
+	private void onScanMenuItemClick(ActionEvent e) {
+		((JRadioButtonMenuItem)e.getSource()).setSelected(true);
+		panel.setDraggingTool(PlotPanel.DraggingTool.SCAN);
+	}
+
+	private void onZoomMenuItemClick(ActionEvent e) {
+		((JRadioButtonMenuItem)e.getSource()).setSelected(true);
+		panel.setDraggingTool(PlotPanel.DraggingTool.ZOOM);
+	}
+
+	private void onBoxMenuItemClick(ActionEvent e) {
+		panel.enableBox(((JCheckBoxMenuItem)e.getSource()).getState());
 		try { panel.updateBackgroundImage(); }
-		catch (PlotException e) { bailOut(e); }
+		catch (PlotException ex) { bailOut(ex); }
+		panel.repaint();
+	}
 
-		// At this point we can query panel to set the radio and check box
-		// menu items to default values.
-		scanMenuItem.setSelected(panel.getDraggingTool() == PlotPanel.DraggingTool.SCAN);
-		boxItem.setSelected(panel.isBoxEnabled());
-		crosshairItem.setSelected(panel.isCrosshairEnabled());
-		toolTipItem.setSelected(panel.isToolTipEnabled());
+	private void onCrosshairMenuItemClick(ActionEvent e) {
+		panel.enableCrosshair(((JCheckBoxMenuItem)e.getSource()).getState());
+		panel.repaint();
+	}
+
+	private void onToolTipMenuItemClick(ActionEvent e) {
+		panel.enableToolTip(((JCheckBoxMenuItem)e.getSource()).getState());
+		panel.repaint();
 	}
 
 	/**
