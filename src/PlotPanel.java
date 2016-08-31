@@ -19,7 +19,6 @@ import java.util.Formatter;
 public class PlotPanel extends JPanel {
 
     private BufferedImage backgroundImage = null;
-    protected BufferedImage plotImage = null;
 
     private boolean enabledToolTip = true;
     private boolean enabledBox = true;
@@ -287,7 +286,6 @@ public class PlotPanel extends JPanel {
             computePlotSize();
             if (plotWidth == 0) {
                 backgroundImage = null;
-                plotImage = null;
             }
             else {
                 plot.resize(plotWidth, plotHeight);

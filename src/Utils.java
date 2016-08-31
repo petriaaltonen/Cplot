@@ -58,5 +58,18 @@ public class Utils {
         }
         return i;
     }
-    
+
+    /**
+     * Given a file name or a full file path, return the file extension defined as the substring
+     * following the last dot in the string.
+     * @param filename
+     * @return
+     */
+    public static String getFileExtension(String filename) {
+        if (filename.length() == 0)
+            return "";
+        String[] array = filename.split("\\."); // Note that split takes a regex as its argument so we need to be careful here.
+        return (array.length > 1) ? array[array.length - 1] : "";
+    }
+
 }

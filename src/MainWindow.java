@@ -3,7 +3,6 @@
  * 5.3.2014
  * Petri Aaltonen
  *
- * TODO: A bug in saving an image. Exception was thrown.
  */
 
 import java.io.*;
@@ -29,9 +28,6 @@ public class MainWindow extends JFrame {
 	private Evaluator evaluator = null;
 	private Plot plot = null;
 
-	// Menu items for choosing coloring.
-	private HashMap<String, JMenuItem> coloringItems = null;
-
 	// Sub components for the PlotPanel and a FileChooser
 	private PlotPanel panel = null;
 	JFileChooser fileChooser = null;
@@ -53,30 +49,23 @@ public class MainWindow extends JFrame {
 	private JCheckBoxMenuItem toolTipItem;
 	private JMenu helpMenu;
 	private JMenuItem aboutItem;
+	private HashMap<String, JMenuItem> coloringItems = null;
 
 	/**
 	 * The program has encountered a fatal error which it cannot recover from. Show an error
 	 * message in a message dialog box and print the same message in the standard output
 	 * stream. Then close the program.
-	 *
-	 * @param e exception which caused the fatal error (can be null)
+	 * @param e The exception which caused the fatal error (can be null).
      */
 	protected void bailOut(Exception e) {
-		String msg;
+		String msg = (e != null)
+				? new String("Complex plot encountered a fatal error and can not continue running.\nException: "
+				+ e.toString()
+				+ "\nMessage: "
+				+ e.getMessage())
+				: new String("Complex plot encountered a fatal error and can not continue running.");
 
-		if (e != null) {
-			msg = new String("Complex plot encountered a fatal error and can not continue "
-					+ "running.\nException: "
-					+ e.toString()
-					+ "\nMessage: "
-					+ e.getMessage());
-		}
-		else {
-			msg = new String("Complex plot encountered a fatal error and can not continue running.");
-		}
-
-		JOptionPane.showMessageDialog(this, msg, "Fatal error",
-				JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(this, msg, "Fatal error", JOptionPane.ERROR_MESSAGE);
 		System.out.println(msg);
 		System.exit(-1);
 	}
@@ -126,6 +115,9 @@ public class MainWindow extends JFrame {
 		toolTipItem.setSelected(panel.isToolTipEnabled());
 	}
 
+	/**
+	 * Create the application main menu.
+	 */
 	private void createMenu() {
 
 		menuBar = new JMenuBar();
@@ -201,6 +193,9 @@ public class MainWindow extends JFrame {
 		setJMenuBar(menuBar);
 	}
 
+	/**
+	 * Create a status bar for showing the progress of computation.
+	 */
 	private void createStatusBar() {
 
 		StatusBar statusBar = new StatusBar();
@@ -230,31 +225,67 @@ public class MainWindow extends JFrame {
 		});
 	}
 
+	/**
+	 * Respond to the user clicking the save menu item. Show a file chooser which lets the user to
+	 * choose the file name and the path where the image will be written. If the chosen file already
+	 * exists, show a dialog box which informs the user about this and lets them to choose whether to
+	 * overwrite the existing data. If the user chooses no, do nothing. If the user wants to choose a
+	 * different file name they have to click the save menu item again.
+	 *
+	 * We currently support only the png format. If the chosen file name does not end in .png, it will
+	 * be added to the file name automatically. This leads to the following behaviour. If the user chooses
+	 * an existing file with an extension different than .png, the existing file will not be overwritten
+	 * because the file names are not the same but differ by having or not having the .png extension.
+	 */
 	private void onSaveMenuItemClick() {
-		int tmp = fileChooser.showSaveDialog(MainWindow.this);
-		if (tmp == JFileChooser.APPROVE_OPTION) {
+		int chosenOption = fileChooser.showSaveDialog(MainWindow.this);
+		if (chosenOption == JFileChooser.APPROVE_OPTION) {
 			try {
 				File file = fileChooser.getSelectedFile();
-				ImageIO.write(panel.plotImage, "png", file);
+				if (!Utils.getFileExtension(file.getName()).equals("png"))
+					file = new File(file.getPath() + ".png");
+
+				if (file.exists()) {
+					if (JOptionPane.showOptionDialog(this, "File " + file.getName() + " already exists. " +
+							"Do you want to overwrite the existing data?", "Overwrite existing data", JOptionPane.YES_NO_OPTION,
+							JOptionPane.QUESTION_MESSAGE, null, null, null) == JOptionPane.NO_OPTION)
+						return;
+				}
+
+				ImageIO.write(plot.getImage(), "png", file);
 			}
 			catch (IOException e) {
-				// TODO: do something
+				String msg = new String("Could not save the imsage due to an IO error: " + e.getMessage());
+				JOptionPane.showMessageDialog(this, msg, "Could not save image", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
 
+	/**
+	 * Respond to the user clicking the exit menu item.
+	 */
 	private void onExitMenuItemClick() {
 		System.exit(0);
 	}
 
+	/**
+	 * Respond to the user clicking the new plot menu item.
+	 */
 	private void onNewPlotMenuItemClick() {
 		NewPlotWindow plotWindow = new NewPlotWindow(MainWindow.this, plot);
 	}
 
+	/**
+	 * Respond to the user clicking the set limits menu item.
+	 */
 	private void onSetLimitsMenuItemClick() {
 		SetLimitsWindow limitsWindow = new SetLimitsWindow(MainWindow.this);
 	}
 
+	/**
+	 * Respond to the user clicking one of the coloring options menu item.
+	 * @param e
+     */
 	private void onColoringMenuItemClick(ActionEvent e) {
 		String oldColoring = plot.getColoring();
 		try {
@@ -267,16 +298,28 @@ public class MainWindow extends JFrame {
 		((JMenuItem) e.getSource()).setEnabled(false);
 	}
 
+	/**
+	 * Respond to the user clicking the scan radio button menu item.
+	 * @param e
+     */
 	private void onScanMenuItemClick(ActionEvent e) {
 		((JRadioButtonMenuItem)e.getSource()).setSelected(true);
 		panel.setDraggingTool(PlotPanel.DraggingTool.SCAN);
 	}
 
+	/**
+	 * Respond to the user clicking the zoom radio button menu item.
+	 * @param e
+     */
 	private void onZoomMenuItemClick(ActionEvent e) {
 		((JRadioButtonMenuItem)e.getSource()).setSelected(true);
 		panel.setDraggingTool(PlotPanel.DraggingTool.ZOOM);
 	}
 
+	/**
+	 * Respond to the user clicking the show box checkbox menu item.
+	 * @param e
+     */
 	private void onBoxMenuItemClick(ActionEvent e) {
 		panel.enableBox(((JCheckBoxMenuItem)e.getSource()).getState());
 		try { panel.updateBackgroundImage(); }
@@ -284,11 +327,19 @@ public class MainWindow extends JFrame {
 		panel.repaint();
 	}
 
+	/**
+	 * Respond to the user clicking the show corsshair checkbox menu item.
+	 * @param e
+     */
 	private void onCrosshairMenuItemClick(ActionEvent e) {
 		panel.enableCrosshair(((JCheckBoxMenuItem)e.getSource()).getState());
 		panel.repaint();
 	}
 
+	/**
+	 * Respond to the user clicking the show tooltip checkbox menu item.
+	 * @param e
+     */
 	private void onToolTipMenuItemClick(ActionEvent e) {
 		panel.enableToolTip(((JCheckBoxMenuItem)e.getSource()).getState());
 		panel.repaint();
@@ -296,7 +347,6 @@ public class MainWindow extends JFrame {
 
 	/**
 	 * Make a new plot.
-	 *
 	 * @param params parameters for the new plot
      */
 	protected void plot(PlotParams params) {
@@ -325,11 +375,10 @@ public class MainWindow extends JFrame {
 
 	/**
 	 * Set the limits for the plot.
-	 *
-	 * @param xmin
-	 * @param xmax
-	 * @param ymin
-     * @param ymax
+	 * @param xmin Must be strictly less than xmax.
+	 * @param xmax Must be strictly greater than xmin.
+	 * @param ymin Must be strictly less than ymax.
+     * @param ymax Must be strictly greater than ymin.
      */
 	public void setLimits(double xmin, double xmax, double ymin, double ymax) {
 		assert xmin < xmax : "xmin >= xmax";
@@ -347,8 +396,7 @@ public class MainWindow extends JFrame {
 
 	/**
 	 * The main function
-	 *
-	 * @param args not used
+	 * @param args Not used
      */
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {

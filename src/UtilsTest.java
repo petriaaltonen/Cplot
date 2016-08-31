@@ -73,4 +73,24 @@ public class UtilsTest {
         assertEquals(Utils.significantDecimalDigits(8.69923669), 8);
     }
 
+    @Test
+    public void testGetFileExtensionEmptyString() {
+        assertEquals("", Utils.getFileExtension(""));
+    }
+
+    @Test
+    public void testGetFileExtensionNoExtension() {
+        assertEquals("", Utils.getFileExtension("test"));
+    }
+
+    @Test
+    public void testGetFileExtensionSingleDot() {
+        assertEquals("png", Utils.getFileExtension("test.png"));
+    }
+
+    @Test
+    public void testGetFileExtensionTwoDots() {
+        assertEquals("png", Utils.getFileExtension("test.txt.png"));
+    }
+
 }
