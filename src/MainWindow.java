@@ -272,14 +272,27 @@ public class MainWindow extends JFrame {
 	 * Respond to the user clicking the new plot menu item.
 	 */
 	private void onNewPlotMenuItemClick() {
-		NewPlotWindow plotWindow = new NewPlotWindow(MainWindow.this, plot);
+		NewPlotWindow plotWindow = new NewPlotWindow(plot.listColoring());
+		plotWindow.registerCallback(params -> {
+			plot(params);
+		});
 	}
 
 	/**
 	 * Respond to the user clicking the set limits menu item.
 	 */
 	private void onSetLimitsMenuItemClick() {
-		SetLimitsWindow limitsWindow = new SetLimitsWindow(MainWindow.this);
+		SetLimitsWindow limitsWindow = new SetLimitsWindow();
+		limitsWindow.registerCallback((xmin, xmax, ymin, ymax) -> {
+			try {
+				plot.setLimits(xmin, xmax, ymin, ymax);
+			}
+			catch (PlotException e) {
+				// SetLimitsWindow has already validated user input data so we really should not
+				// get an exception here.
+				bailOut(e);
+			}
+		});
 	}
 
 	/**
@@ -367,27 +380,6 @@ public class MainWindow extends JFrame {
 			String msg = "Expression is invalid for:\n" + e.getMessage();
 			JOptionPane.showMessageDialog(this, msg, "Invalid expression",
 					JOptionPane.ERROR_MESSAGE);
-		}
-		catch (PlotException e) {
-			bailOut(e);
-		}
-	}
-
-	/**
-	 * Set the limits for the plot.
-	 * @param xmin Must be strictly less than xmax.
-	 * @param xmax Must be strictly greater than xmin.
-	 * @param ymin Must be strictly less than ymax.
-     * @param ymax Must be strictly greater than ymin.
-     */
-	public void setLimits(double xmin, double xmax, double ymin, double ymax) {
-		assert xmin < xmax : "xmin >= xmax";
-		assert ymin < ymax : "ymin >= ymax";
-
-		try {
-			plot.setLimits(xmin, xmax, ymin, ymax);
-			panel.updateBackgroundImage();
-			panel.repaint();
 		}
 		catch (PlotException e) {
 			bailOut(e);

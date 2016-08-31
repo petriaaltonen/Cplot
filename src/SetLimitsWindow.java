@@ -4,8 +4,8 @@
  * Petri Aaltonen
  */
 
+import java.util.LinkedList;
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
@@ -16,20 +16,33 @@ import javax.swing.border.*;
  */
 public class SetLimitsWindow extends JFrame {
 
+	/**
+	 * Just a functional interface for using lambdas in registerCallback.
+	 */
+	public interface SetLimitsWindowCallback {
+		void callback(double xmin, double xmax, double ymin, double ymax);
+	}
+
+	// Default window size
 	private final int DEFAULT_XSIZE = 300;
 	private final int DEFAULT_YSIZE = 200;
 
-	MainWindow mainWindow;
-	SetLimitsWindow selfRef = this;
-	JTextField xminField, xmaxField, yminField, ymaxField;
+	// Text fields for user input.
+	private JTextField xminField, xmaxField, yminField, ymaxField;
 
-	public SetLimitsWindow(MainWindow mainRef) {
+	// A list of registered callbacks.
+	private LinkedList<SetLimitsWindowCallback> callbacks;
+
+	/**
+	 * Initialize the window.
+	 */
+	public SetLimitsWindow() {
 		super("Set axes limits");
 		setSize(DEFAULT_XSIZE, DEFAULT_YSIZE);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
 
-		mainWindow = mainRef;
+		callbacks = new LinkedList<>();
 
 		JPanel limitsPanel = new JPanel();
 		limitsPanel.setLayout(new GridLayout(2, 2));
@@ -72,76 +85,76 @@ public class SetLimitsWindow extends JFrame {
 		buttonPanel.add(cancelButton);
 		buttonPanel.add(plotButton);
 
-		cancelButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-			}
-		});
+		// Add buttons' behaviour when they are clicked.
+		cancelButton.addActionListener(event -> dispose());
+		plotButton.addActionListener(event -> onPlotButtonClick());
 
-		plotButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-
-				double xmin, xmax, ymin, ymax;
-
-				try {
-					xmin = Double.parseDouble(xminField.getText());
-				} catch (NumberFormatException e) {
-					JOptionPane.showMessageDialog(selfRef,
-							"xmin is not a valid number", "Invalid limits",
-							JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-				try {
-					xmax = Double.parseDouble(xmaxField.getText());
-				} catch (NumberFormatException e) {
-					JOptionPane.showMessageDialog(selfRef,
-							"xmax is not a valid number", "Invalid limits",
-							JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-				try {
-					ymin = Double.parseDouble(yminField.getText());
-				} catch (NumberFormatException e) {
-					JOptionPane.showMessageDialog(selfRef,
-							"ymin is not a valid number", "Invalid limits",
-							JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-				try {
-					ymax = Double.parseDouble(ymaxField.getText());
-				} catch (NumberFormatException e) {
-					JOptionPane.showMessageDialog(selfRef,
-							"ymax is not a valid number", "Invalid limits",
-							JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-
-				if (xmin >= xmax) {
-					JOptionPane.showMessageDialog(selfRef,
-							"xmin must be less than xmax", "Invalid limits",
-							JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-				if (ymin >= ymax) {
-					JOptionPane.showMessageDialog(selfRef,
-							"ymin must be less than ymax", "Invalid limits",
-							JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-
-				dispose();
-				mainWindow.setLimits(xmin, xmax, ymin, ymax);
-			}
-		});
-
-		getContentPane().setLayout(
-				new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 		add(limitsPanel);
 		add(buttonPanel);
 
 		setVisible(true);
+	}
+
+	/**
+	 * Respond to the user clicking the plot button. We shall check that the given values are valid.
+	 * If not, show an error message and do nothing further. If the values are ok, call all registered
+	 * callbacks and close the window.
+	 */
+	private void onPlotButtonClick() {
+		double xmin, xmax, ymin, ymax;
+
+		try {
+			xmin = Double.parseDouble(xminField.getText());
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(this, "xmin is not a valid number", "Invalid limits", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		try {
+			xmax = Double.parseDouble(xmaxField.getText());
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(this, "xmax is not a valid number", "Invalid limits", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		try {
+			ymin = Double.parseDouble(yminField.getText());
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(this, "ymin is not a valid number", "Invalid limits", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		try {
+			ymax = Double.parseDouble(ymaxField.getText());
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(this, "ymax is not a valid number", "Invalid limits", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		if (xmin >= xmax) {
+			JOptionPane.showMessageDialog(this, "xmin must be less than xmax", "Invalid limits", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		if (ymin >= ymax) {
+			JOptionPane.showMessageDialog(this, "ymin must be less than ymax", "Invalid limits", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		for (SetLimitsWindowCallback c : callbacks)
+			c.callback(xmin, xmax, ymin, ymax);
+
+		dispose();
+	}
+
+	/**
+	 * Register a new callback.
+	 * @param callback If null, do nothing.
+     */
+	public void registerCallback(SetLimitsWindowCallback callback) {
+		if (callback != null)
+			callbacks.add(callback);
 	}
 
 }
