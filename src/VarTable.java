@@ -1,15 +1,8 @@
-/*
- * VarTable.java
- * 26.2.2014
- * Petri Aaltonen
- */
-
 import java.util.HashMap;
 
 /**
- *
+ * A table of variables
  * @author Petri Aaltonen
- *
  */
 public class VarTable {
 

@@ -1,13 +1,8 @@
-/*
- * BRYSColoring.java
- * 15.4.2014
- * Petri Aaltonen 
- */
-
 import java.awt.Color;
 
 /**
- *
+ * A coloring scheme which uses black, red and yellow colors and makes gradients to represent change
+ * in absolute value.
  * @author Petri Aaltonen
  *
  */
@@ -27,8 +22,7 @@ public class BRYSColoring extends Coloring {
 		h /= (Math.PI / 3.0);
 		h *= h;
 		h *= (Math.PI / 3.0);
-		double s = Math.log(Complex.abs(z))
-				- (double) Math.floor(Math.log(Complex.abs(z)));
+		double s = Math.log(Complex.abs(z)) - (double) Math.floor(Math.log(Complex.abs(z)));
 		return hsvToRgb(h, s, b);
 	}
 

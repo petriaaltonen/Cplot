@@ -1,13 +1,11 @@
-//
-// PlotCoordinates.java
-// Petri Aaltonen
-//
-
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 
-
+/**
+ * Manage the coordinate system used for plotting.
+ * @author Petri Aaltonen
+ */
 public class PlotCoordinates {
 
     private static final double DEF_XMIN = -1.0;

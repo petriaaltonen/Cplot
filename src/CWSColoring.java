@@ -1,15 +1,9 @@
-/*
- * CWSColoring.java
- * 15.4.2014
- * Petri Aaltonen
- */
-
 import java.awt.Color;
 
 /**
- *
+ * A coloring scheme which uses a full color wheel and shows gradients to represent the
+ * changes in absolute value.
  * @author Petri Aaltonen
- *
  */
 public class CWSColoring extends Coloring {
 

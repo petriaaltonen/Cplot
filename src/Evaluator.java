@@ -1,13 +1,6 @@
-/*
- * Evaluator.java
- * 26.2.2014
- * Petri Aaltonen
- */
-
 /**
  * Evaluator takes an eval-tree from a Parser and evaluates the tree producing
- * a complex number as a result. 
- *
+ * a complex number as a result.
  * @author Petri Aaltonen
  */
 public class Evaluator {
@@ -205,7 +198,7 @@ public class Evaluator {
 	private EvalNode evalRoot = null;
 
 	/**
-	 * The only available constructor for Evaluator.
+	 * Initialize the evaluator.
 	 */
 	public Evaluator() {
 		varTable = new VarTable();
@@ -213,8 +206,8 @@ public class Evaluator {
 	}
 
 	/**
-	 * Attach the Evaluator an eval-tree root.
-	 * @param root An EvalNode-object which is supposed to be a root of an eval-tree.
+	 * Set the root of a tree.
+	 * @param root An EvalNode-object which is supposed to be a root of a tree.
 	 */
 	public void setRoot(EvalNode root) {
 		evalRoot = root;
@@ -222,7 +215,7 @@ public class Evaluator {
 	}
 
 	/**
-	 * Evaluates the eval-tree at complex point z.
+	 * Evaluates the tree at complex point z.
 	 * @param z A complex number
 	 * @return The result of the evaluation
 	 */

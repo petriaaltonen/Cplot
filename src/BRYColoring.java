@@ -1,15 +1,8 @@
-/*
- * BRYColoring.java
- * 15.4.2014
- * Petri Aaltonen
- */
-
 import java.awt.Color;
 
 /**
- *
+ * A simple coloring scheme which uses black, red and yellow colors.
  * @author Petri Aaltonen
- *
  */
 public class BRYColoring extends Coloring {
 

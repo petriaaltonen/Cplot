@@ -1,13 +1,6 @@
-/*
- * Complex.java
- * 26.2.2014
- * Petri Aaltonen
- */
-
 /**
- *
+ * Implements a complex number and a number of functions for them.
  * @author Petri Aaltonen
- *
  */
 public class Complex {
 
@@ -18,12 +11,12 @@ public class Complex {
     public double y = 0.0;
 
     /**
-     * Constructor which sets the complex number to 0.
+     * Set both the real and the imaginary part to 0.
      */
     public Complex() {}
 
     /**
-     * Constructor which creates a real number, ie. sets the imaginary part to 0.
+     * Create a real number, ie. sets the imaginary part to 0.
      * @param x the real part
      */
     public Complex(double x) {
@@ -31,7 +24,7 @@ public class Complex {
     }
 
     /**
-     * Constructor
+     * Set both the real and imaginary part to given values.
      * @param x the real part
      * @param y the imaginary part
      */
@@ -41,10 +34,12 @@ public class Complex {
     }
 
     /**
-     * A copy constructor
-     * @param z another complex number
+     * Set the complex number to the value of another.
+     * @param z another complex number, which must not be null
      */
     public Complex(Complex z) {
+        if (z == null)
+            throw new IllegalArgumentException("z must not be null in Complex.Complex");
         this.x = z.x;
         this.y = z.y;
     }
@@ -52,7 +47,6 @@ public class Complex {
     /**
      * Convert the polar representation of a complex number to the
      * rectangular coordinates.
-     *
      * @param r the polar radius
      * @param t the polar angle in radians
      * @return the complex number r*exp(i*t)
@@ -67,6 +61,8 @@ public class Complex {
      * @return the absolute value of the complex number z
      */
     public static double abs(Complex z) {
+        if (z == null)
+            throw new IllegalArgumentException("z must not be null in Complex.abs");
         return Math.sqrt(z.x * z.x + z.y * z.y);
     }
 
@@ -76,6 +72,8 @@ public class Complex {
      * @return the argument of the complex number z
      */
     public static double arg(Complex z) {
+        if (z == null)
+            throw new IllegalArgumentException("z must not be null in Complex.arg");
         return Math.atan2(z.y, z.x);
     }
 
@@ -85,9 +83,10 @@ public class Complex {
      * @return the argument of the complex number z
      */
     public static double arg2(Complex z) {
+        if (z == null)
+            throw new IllegalArgumentException("z must not be null in Complex.arg2");
         double t = arg(z);
-        if (t >= 0.0) return t;
-        else return (2.0 * Math.PI + t);
+        return t >= 0.0 ? t : 2.0 * Math.PI + t;
     }
 
     /**
@@ -96,6 +95,8 @@ public class Complex {
      * @return the complex conjugate of z
      */
     public static Complex conj(Complex z) {
+        if (z == null)
+            throw new IllegalArgumentException("z must not be null in Complex.conj");
         return new Complex(z.x, -z.y);
     }
 
@@ -105,6 +106,8 @@ public class Complex {
      * @return the opposite number of the the complex number z 
      */
     public static Complex neg(Complex z) {
+        if (z == null)
+            throw new IllegalArgumentException("z must not be null in Complex.neg");
         return new Complex(-z.x, -z.y);
     }
 
@@ -115,6 +118,8 @@ public class Complex {
      * @return  a new complex number z + w
      */
     public static Complex add(Complex z, Complex w) {
+        if (z == null || w == null)
+            throw new IllegalArgumentException("z and w must not be null in Complex.sum");
         return new Complex(z.x + w.x, z.y + w.y);
     }
 
@@ -125,6 +130,8 @@ public class Complex {
      * @return  a new complex number z - w
      */
     public static Complex sub(Complex z, Complex w) {
+        if (z == null || w == null)
+            throw new IllegalArgumentException("z and w must not be null in Complex.sub");
         return new Complex(z.x - w.x, z.y - w.y);
     }
 
@@ -135,6 +142,8 @@ public class Complex {
      * @return  a new complex number z * w
      */
     public static Complex mul(Complex z, Complex w) {
+        if (z == null || w == null)
+            throw new IllegalArgumentException("z and w must not be null in Complex.mul");
         return new Complex(z.x * w.x - z.y * w.y, z.x * w.y + z.y * w.x);
     }
 
@@ -143,8 +152,11 @@ public class Complex {
      * @param z a complex number
      * @param w a complex number
      * @return  a new complex number z / w
+     * TODO: How to handle the case w equals 0 + 0i?
      */
     public static Complex div(Complex z, Complex w) {
+        if (z == null || w == null)
+            throw new IllegalArgumentException("z and w must not be null in Complex.div");
         double t = w.x * w.x + w.y * w.y;
         return new Complex((z.x * w.x + z.y * w.y) / t, (z.y * w.x - z.x * w.y) / t);
     }
@@ -154,8 +166,11 @@ public class Complex {
      * @param z the base
      * @param w the exponent
      * @return the complex number z^w
+     * TODO: Check any boundary cases!
      */
     public static Complex pow(Complex z, Complex w) {
+        if (z == null || w == null)
+            throw new IllegalArgumentException("z and w must not be null in Complex.pow");
         return exp(mul(w, log(z)));
     }
 
@@ -163,8 +178,11 @@ public class Complex {
      * Return the complex exponential function exp(z).
      * @param z a complex number
      * @return result of the computation exp(z)
+     * TODO: Check any boundary cases!
      */
     public static Complex exp(Complex z) {
+        if (z == null)
+            throw new IllegalArgumentException("z must not be null in Complex.exp");
         return polarToRect(Math.exp(z.x), z.y);
     }
 
@@ -172,9 +190,11 @@ public class Complex {
      * Return the complex logarithm log(z).
      * @param z a complex number
      * @return result of the computation log(z)
+     * TODO: log(0.0) is undefined! How do we deal with this?
      */
     public static Complex log(Complex z) {
-        // TODO: log(0.0) is undefined! How do we deal with this?
+        if (z == null)
+            throw new IllegalArgumentException("z must not be null in Complex.log");
         return new Complex(Math.log(abs(z)), arg(z));
     }
 
@@ -182,14 +202,16 @@ public class Complex {
      * Return the complex square root.
      * @param z a complex number
      * @return result of the computation sqrt(z)
+     * TODO: Check the boundary cases!
      */
     public static Complex sqrt(Complex z) {
+        if (z == null)
+            throw new IllegalArgumentException("z must not be null in Complex.sqrt");
         // Note: sqrt(0.0) should return 0.0 but it's not possible to compute
         // it using the formula exp(0.5*log(z)).
-        if (z.x > -TOL && z.x < TOL && z.y > -TOL && z.y < TOL)
-            return new Complex(0.0, 0.0);
-        else
-            return Complex.pow(z, new Complex(0.5, 0.0));
+        return (z.x > -TOL && z.x < TOL && z.y > -TOL && z.y < TOL)
+            ? new Complex(0.0, 0.0);
+            : Complex.pow(z, new Complex(0.5, 0.0));
     }
 
     /**
@@ -198,6 +220,8 @@ public class Complex {
      * @return result of the computation sin(z)
      */
     public static Complex sin(Complex z) {
+        if (z == null)
+            throw new IllegalArgumentException("z must not be null in Complex.sin");
         return new Complex(Math.sin(z.x) * Math.cosh(z.y), Math.cos(z.x)
                 * Math.sinh(z.y));
     }
@@ -208,6 +232,8 @@ public class Complex {
      * @return result of the computation cos(z)
      */
     public static Complex cos(Complex z) {
+        if (z == null)
+            throw new IllegalArgumentException("z must not be null in Complex.cos");
         return new Complex(Math.cos(z.x) * Math.cosh(z.y), -Math.sin(z.x)
                 * Math.sinh(z.y));
     }
@@ -216,8 +242,11 @@ public class Complex {
      * Return the complex tangent.
      * @param z a complex number
      * @return result of the computation tan(z)
+     * TODO: How do we handle z equal to 0 + 0i?
      */
     public static Complex tan(Complex z) {
+        if (z == null)
+            throw new IllegalArgumentException("z must not be null in Complex.tan");
         return Complex.div(sin(z), cos(z));
     }
 

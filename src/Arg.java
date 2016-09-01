@@ -1,13 +1,6 @@
-/*
- * Arg.java
- * 28.2.2014
- * Petri Aaltonen
- */
-
 /**
- * 
+ * The complex argument function
  * @author Petri Aaltonen
- * 
  */
 public class Arg extends Function {
 

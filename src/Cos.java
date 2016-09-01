@@ -1,13 +1,6 @@
-/*
- * Cos.java
- * 4.3.2014
- * Petri Aaltonen
- */
-
 /**
- * 
+ * The cosine function
  * @author Petri Aaltonen
- *
  */
 public class Cos extends Function {
 

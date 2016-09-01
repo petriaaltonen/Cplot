@@ -1,13 +1,6 @@
-/*
- * Exp.java
- * 28.2.2014
- * Petri Aaltonen
- */
-
 /**
- * 
+ * The exponential function.
  * @author Petri Aaltonen
- *
  */
 public class Exp extends Function {
 

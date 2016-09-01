@@ -1,15 +1,13 @@
-//
-// ParserTest.java
-// Petri Aaltonen
-//
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-
+/**
+ * Test the Parser class
+ * @author Petri Aaltonen
+ */
 public class ParserTest {
 
     Parser parser = null;

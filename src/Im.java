@@ -1,13 +1,6 @@
-/*
- * Im.java
- * 28.2.2014
- * Petri Aaltonen
- */
-
 /**
- * 
+ * The function which returns the imaginary part of a complex number
  * @author Petri Aaltonen
- *
  */
 public class Im extends Function {
 

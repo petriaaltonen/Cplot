@@ -1,11 +1,9 @@
-/*
- * CWColoring.java
- * 15.4.2014
- * Petri Aaltonen
- */
-
 import java.awt.Color;
 
+/**
+ * A coloring scheme which uses a full color wheel.
+ * @author Petri Aaltonen
+ */
 public class CWColoring extends Coloring {
 
     private static final String name = "Color wheel";

@@ -1,9 +1,3 @@
-/*
- * PlotWorker.java
- * 10.9.2014
- * Petri Aaltonen
- */
-
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
@@ -13,7 +7,7 @@ import javax.swing.SwingWorker;
 
 /**
  * A worker-thread that does the heavy number-crunching job of computing the plot.
- * @author petri
+ * @author Petri Aaltonen
  */
 public class PlotWorker extends SwingWorker<BufferedImage, Void> {
 

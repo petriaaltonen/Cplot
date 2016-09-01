@@ -1,10 +1,3 @@
-/*
- * MainWindow.java
- * 5.3.2014
- * Petri Aaltonen
- *
- */
-
 import java.io.*;
 import javax.swing.*;
 import java.awt.*;
@@ -13,9 +6,8 @@ import javax.imageio.*;
 import java.util.HashMap;
 
 /**
- *
+ * The application main window
  * @author Petri Aaltonen
- *
  */
 public class MainWindow extends JFrame {
 

@@ -1,9 +1,3 @@
-/*
- * PlotPanel.java
- * 29.3.2014
- * Petri Aaltonen
- */
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.*;
@@ -12,9 +6,8 @@ import java.awt.image.*;
 import java.util.Formatter;
 
 /**
- *
+ * An UI-component which contains the plot.
  * @author Petri Aaltonen
- *
  */
 public class PlotPanel extends JPanel {
 

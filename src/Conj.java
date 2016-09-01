@@ -1,13 +1,6 @@
-/*
- * Conj.java
- * 28.2.2014
- * Petri Aaltonen
- */
-
 /**
- * 
+ * The complex conjugate function
  * @author Petri Aaltonen
- *
  */
 public class Conj extends Function {
 

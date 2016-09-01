@@ -1,18 +1,11 @@
-/*
- * NewPlotWindow.java
- * 6.3.2014
- * Petri Aaltonen
- */
-
 import java.util.LinkedList;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
 /**
- *
+ * A window for specifying the parameters for a new plot
  * @author Petri Aaltonen
- *
  */
 public class NewPlotWindow extends JFrame {
 

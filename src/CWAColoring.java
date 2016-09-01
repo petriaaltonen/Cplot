@@ -1,15 +1,9 @@
-/*
- * CWAColoring.java
- * 15.4.2014
- * Petri Aaltonen
- */
-
 import java.awt.Color;
 
 /**
- *
+ * Coloring scheme which uses a full color wheel and shows where the complex function maps the
+ * real and imaginary axes.
  * @author Petri Aaltonen
- *
  */
 public class CWAColoring extends Coloring {
 

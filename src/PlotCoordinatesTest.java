@@ -1,15 +1,13 @@
-//
-// PlotCoordinatesTest.java
-// Petri Aaltonen
-//
-
 import org.junit.Test;
 
 import java.awt.Point;
 
 import static org.junit.Assert.*;
 
-
+/**
+ * Test the PlotCoordinates class
+ * @author Petri Aaltonen
+ */
 public class PlotCoordinatesTest {
 
     @Test

@@ -1,19 +1,12 @@
-/*
- * FunctionTable.java
- * 26.2.2014
- * Petri Aaltonen
- */
-
 import java.util.HashMap;
 
 /**
- *
+ * Store implementations of functions which shall be accessed with their names.
  * @author Petri Aaltonen
- *
  */
 public class FunctionTable {
 
-	HashMap<String, Function> map = null;
+	private HashMap<String, Function> map = null;
 
 	/**
 	 * Create a new function table and populate it with all known functions.
@@ -40,10 +33,22 @@ public class FunctionTable {
 		}
 	}
 
+	/**
+	 * Add a new function into the table.
+	 * @param name name of the function
+	 * @param fcn an instance of a subclass of Function
+	 * @throws EvaluateException
+     */
 	public void set(String name, Function fcn) throws EvaluateException {
 		map.put(name, fcn);
 	}
 
+	/**
+	 * Get a function from the table.
+	 * @param name function name
+	 * @return an instance of a Function's subclass
+	 * @throws EvaluateException
+     */
 	public Function get(String name) throws EvaluateException {
 		Function fcn = map.get(name);
 		if (fcn == null) {

@@ -1,16 +1,11 @@
-/*
- * EvaluateException.java
- * 26.2.2014
- * Petri Aaltonen
- */
-
 /**
- * 
+ * An exception used by the evaluator
  * @author Petri Aaltonen
- *
  */
 public class EvaluateException extends Exception {
+
     public EvaluateException(String msg) {
 	super(msg);
     }
+
 }

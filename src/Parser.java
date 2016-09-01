@@ -1,14 +1,7 @@
-/*
- * Parser.java
- * 3.3.2014
- * Petri Aaltonen
- */
-
 import java.util.LinkedList;
 
 /**
- * Parser takes a mathematical expression and forms an eval-tree as a result.
- *
+ * Parser takes a mathematical expression and forms an evaluation tree as a result.
  * @author Petri Aaltonen
  */
 public class Parser {

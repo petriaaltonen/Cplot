@@ -1,13 +1,6 @@
-/*
- * Log.java
- * 28.2.2014
- * Petri Aaltonen
- */
-
 /**
- * 
+ * The logarithm function
  * @author Petri Aaltonen
- *
  */
 public class Log extends Function {
 

@@ -1,15 +1,13 @@
-//
-// UtilsTest.java
-// Petri Aaltonen
-//
-
 import org.junit.Test;
 
 import java.util.Random;
 
 import static org.junit.Assert.*;
 
-
+/**
+ * Test the Utils class
+ * @author Petri Aaltonen
+ */
 public class UtilsTest {
 
     @Test

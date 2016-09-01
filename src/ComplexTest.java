@@ -1,13 +1,11 @@
-//
-// ComplexTest.java
-// Petri Aaltonen
-//
-
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-
+/**
+ * Test the Complex class
+ * @author Petri Aaltonen
+ */
 public class ComplexTest {
 
     private static final double TOL = 1.0e-9;

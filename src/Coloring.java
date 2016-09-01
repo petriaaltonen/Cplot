@@ -1,15 +1,8 @@
-/*
- * Coloring.java
- * 15.4.2014
- * Petri Aaltonen 
- */
-
 import java.awt.Color;
 
 /**
- * 
+ * An abstract class to implement different coloring schemes.
  * @author Petri Aaltonen
- *
  */
 public abstract class Coloring {
 

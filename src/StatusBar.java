@@ -1,11 +1,10 @@
-//
-// StatusBar.java
-// Petri Aaltonen
-//
-
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Implementation of status bar which the Java standard library lacks.
+ * @author Petri Aaltonen
+ */
 public class StatusBar extends JPanel {
 
     private final int PREFERREX_XSIZE = 10;

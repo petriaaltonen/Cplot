@@ -1,13 +1,6 @@
-/*
- * Abs.java
- * 26.2.2014
- * Petri Aaltonen
- */
-
 /**
- * 
+ * The absolute value function
  * @author Petri Aaltonen
- *
  */
 public class Abs extends Function {
 
