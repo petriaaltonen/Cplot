@@ -49,7 +49,7 @@ public class MainWindow extends JFrame {
 	 * stream. Then close the program.
 	 * @param e The exception which caused the fatal error (can be null).
      */
-	protected void bailOut(Exception e) {
+	public static void bailOut(Exception e) {
 		String msg = (e != null)
 				? new String("Complex plot encountered a fatal error and can not continue running.\nException: "
 				+ e.toString()
@@ -57,7 +57,7 @@ public class MainWindow extends JFrame {
 				+ e.getMessage())
 				: new String("Complex plot encountered a fatal error and can not continue running.");
 
-		JOptionPane.showMessageDialog(this, msg, "Fatal error", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(null, msg, "Fatal error", JOptionPane.ERROR_MESSAGE);
 		System.out.println(msg);
 		System.exit(-1);
 	}
@@ -92,7 +92,7 @@ public class MainWindow extends JFrame {
 		createStatusBar();
 
 		// Add a new plot panel
-		panel = new PlotPanel(this, plot);
+		panel = new PlotPanel(plot);
 		getContentPane().add(panel);
 		setVisible(true);
 

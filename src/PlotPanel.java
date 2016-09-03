@@ -6,7 +6,7 @@ import java.awt.image.*;
 import java.util.Formatter;
 
 /**
- * An UI-component which contains the plot.
+ * A UI-component which contains the plot.
  * @author Petri Aaltonen
  */
 public class PlotPanel extends JPanel {
@@ -53,20 +53,15 @@ public class PlotPanel extends JPanel {
     private boolean isComputing = false;
 
     private Plot plot = null;
-    private MainWindow mainWindow = null;
 
     //
     // Constructor is used to set up event handlers.
     //
-    public PlotPanel(MainWindow mainRef, Plot plotRef) {
+    public PlotPanel(Plot plotRef) {
 
         super();
         setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
         plot = plotRef;
-        mainWindow = mainRef;
-
-        // computePlotSize();
-        // plot.resize(plotWidth, plotHeight);
 
         //
         // Handle resize events.
@@ -108,7 +103,7 @@ public class PlotPanel extends JPanel {
                     plot.scan(-deltaX, -deltaY);
 
                     try { updateBackgroundImage(); }
-                    catch (PlotException ex) { mainWindow.bailOut(ex); }
+                    catch (PlotException ex) { MainWindow.bailOut(ex); }
 
                     repaint();
                 }
@@ -175,7 +170,7 @@ public class PlotPanel extends JPanel {
                         updateBackgroundImage();
                         repaint();
                     } catch (PlotException ex) {
-                        mainWindow.bailOut(ex);
+                        MainWindow.bailOut(ex);
                     }
                 }
                 else if (draggingTool == DraggingTool.SCAN) {
@@ -184,7 +179,7 @@ public class PlotPanel extends JPanel {
                         plot.postScanUpdate();
                         updateBackgroundImage();
                     }
-                    catch (PlotException ex) { mainWindow.bailOut(ex); }
+                    catch (PlotException ex) { MainWindow.bailOut(ex); }
                     repaint();
                 }
             }
@@ -208,20 +203,57 @@ public class PlotPanel extends JPanel {
         });
     }
 
+    /**
+     * Enable or disable the box around the plot.
+     * @param val
+     */
     public void enableBox(boolean val) { enabledBox = val; }
+
+    /**
+     * Enable or disable the crosshair.
+     * @param val
+     */
     public void enableCrosshair(boolean val) { enabledCrosshair = val; }
+
+    /**
+     * Enable or disable the tool tip.
+     * @param val
+     */
     public void enableToolTip(boolean val) { enabledToolTip = val; }
 
+    /**
+     * Check whether the box is enabled.
+     * @return
+     */
     public boolean isBoxEnabled() { return enabledBox; }
+
+    /**
+     * Check whether the crosshair is enabled.
+     * @return
+     */
     public boolean isCrosshairEnabled() { return enabledCrosshair; }
+
+    /**
+     * Check whether the tool tip is enabled.
+     * @return
+     */
     public boolean isToolTipEnabled() { return enabledToolTip; }
 
-    public DraggingTool getDraggingTool() { return draggingTool; }
+    /**
+     * Set the type of tool which is used when the mouse is dragged.
+     * @param tool
+     */
     public void setDraggingTool(DraggingTool tool) { draggingTool = tool; }
 
-    //
-    // Compute plot size given image panel width and height.
-    //
+    /**
+     * Return the type of tool which is used when the mouse is dragged.
+     * @return
+     */
+    public DraggingTool getDraggingTool() { return draggingTool; }
+
+    /**
+     * Compute plot size given image panel width and height.
+     */
     private void computePlotSize() {
 
         backgroundWidth = getWidth();
@@ -253,27 +285,27 @@ public class PlotPanel extends JPanel {
         plotHeight = size;
     }
 
-    //
-    // Crop x component inside the plot.
-    //
+    /**
+     * Crop x component inside the plot.
+     */
     private int cropX(int x) {
         if (x < plotLeft) return plotLeft;
         if (x >= plotRight) return plotRight - 1;
         return x;
     }
 
-    //
-    // Crop y component inside the plot.
-    //
+    /**
+     * Crop y component inside the plot.
+     */
     private int cropY(int y) {
         if (y < plotTop) return plotTop;
         if (y >= plotBottom) return plotBottom - 1;
         return y;
     }
 
-    //
-    // Update the plot.
-    //
+    /**
+     * Update the plot after resizing.
+     */
     public void resize() {
         try {
             computePlotSize();
@@ -285,12 +317,12 @@ public class PlotPanel extends JPanel {
                 updateBackgroundImage();
             }
         }
-        catch (PlotException e) { mainWindow.bailOut(e); }
+        catch (PlotException e) { MainWindow.bailOut(e); }
     }
 
-    //
-    // Draw crosshair.
-    //
+    /**
+     * Draw the crosshair.
+     */
     private void drawCrosshair(Graphics g) {
 
         // If the cursor is positioned outside the plot do not draw the crosshair.
@@ -331,9 +363,9 @@ public class PlotPanel extends JPanel {
         g.drawLine(x1, yPos, x2, yPos);
     }
 
-    //
-    // Draw a translucent zoom-box.
-    //
+    /**
+     * Draw a translucent zoom-box.
+     */
     private void drawZoomBox(Graphics g) {
         int x1 = Math.min(zoomX0, zoomX1);
         int x2 = Math.max(zoomX0, zoomX1);
@@ -343,9 +375,9 @@ public class PlotPanel extends JPanel {
         g.fillRect(x1, y1, x2 - x1, y2 - y1);
     }
 
-    //
-    // Draw a tooltip box.
-    //
+    /**
+     * Draw a tooltip box.
+     */
     private void drawToolTip(Graphics g) {
 
         // If the cursor is positioned outside the plot do not draw tooltip.
@@ -423,9 +455,10 @@ public class PlotPanel extends JPanel {
         }
     }
 
-    //
-    // NOTE: We need to override paintComponent NOT paint.
-    //
+    /**
+     * Override the painComponent.
+     * NOTE: We need to override paintComponent NOT paint.
+     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -452,31 +485,31 @@ public class PlotPanel extends JPanel {
         }
     }
 
-    // 
-    // Take a floor of a floating point number at the p:th decimal. Eg.
-    // floorDecimal(1.234, -1) = 1.2
-    // floorDecimal(0.123, 0) = 0
-    // floorDecimal(-1.234, -1) = -1.3
-    //
+    /**
+     * Take a floor of a floating point number at the p:th decimal. Eg.
+     * floorDecimal(1.234, -1) = 1.2
+     * floorDecimal(0.123, 0) = 0
+     * floorDecimal(-1.234, -1) = -1.3
+     */
     static private double floorDecimal(double x, int p) {
         double tmp = Math.pow(10.0, -p);
         return x - Math.pow(10.0, p)*(tmp*x - Math.floor(tmp*x));
     }
 
-    // 
-    // Take a ceiling of a floating point number at the p:th decimal. Eg.
-    // floorDecimal(1.234, -1) = 1.3
-    // floorDecimal(0.123, 0) = 1
-    // floorDecimal(-1.234, -1) = -1.2
-    //
+    /**
+     * Take a ceiling of a floating point number at the p:th decimal. Eg.
+     * floorDecimal(1.234, -1) = 1.3
+     * floorDecimal(0.123, 0) = 1
+     * floorDecimal(-1.234, -1) = -1.2
+     */
     static private double ceilDecimal(double x, int p) {
         double tmp = Math.pow(10.0, -p);
         return x - Math.pow(10.0, p)*(tmp*x - Math.ceil(tmp*x));
     }
 
-    //
-    // Compute tic locations.
-    //
+    /**
+     * Compute tic locations.
+     */
     private double [] computeTicLocations(double a, double b) {
 
         assert a < b : "a must be less than b";
@@ -513,9 +546,9 @@ public class PlotPanel extends JPanel {
         return positions;
     }
 
-    //
-    // A class used to carry around tic-mark data.
-    //
+    /**
+     * A class used to carry around tic-mark data.
+     */
     private static class TicData {
         public int [] xpos = null;
         public int [] ypos = null;
@@ -525,9 +558,9 @@ public class PlotPanel extends JPanel {
         public String ymod = null;
     }
 
-    //
-    // Determine tic locations and labels.
-    //
+    /**
+     * Determine tic locations and labels.
+     */
     private void computeTics(TicData data) {
 
         double [] xtics;
@@ -579,9 +612,9 @@ public class PlotPanel extends JPanel {
         formatter.close();
     }
 
-    //
-    // Draw a box on the backgroundImage.
-    //
+    /**
+     * Draw a box on the backgroundImage.
+     */
     private void drawBox() {
 
         assert backgroundImage != null;
@@ -633,9 +666,9 @@ public class PlotPanel extends JPanel {
         }
     }
 
-    //
-    // Update the backgroundImage.
-    //
+    /**
+     * Update the backgroundImage.
+     */
     void updateBackgroundImage() throws PlotException {
 
         if (backgroundImage != null) backgroundImage = null;

@@ -150,9 +150,8 @@ public class Complex {
     /**
      * Return the quotient of two complex numbers.
      * @param z a complex number
-     * @param w a complex number
+     * @param w a complex number. If w is zero return (NaN, NaN).
      * @return  a new complex number z / w
-     * TODO: How to handle the case w equals 0 + 0i?
      */
     public static Complex div(Complex z, Complex w) {
         if (z == null || w == null)
@@ -163,10 +162,9 @@ public class Complex {
 
     /**
      * Return the complex power z^w.
-     * @param z the base
+     * @param z the base. If z is zero return (NaN, NaN).
      * @param w the exponent
      * @return the complex number z^w
-     * TODO: Check any boundary cases!
      */
     public static Complex pow(Complex z, Complex w) {
         if (z == null || w == null)
@@ -178,7 +176,6 @@ public class Complex {
      * Return the complex exponential function exp(z).
      * @param z a complex number
      * @return result of the computation exp(z)
-     * TODO: Check any boundary cases!
      */
     public static Complex exp(Complex z) {
         if (z == null)
@@ -188,21 +185,21 @@ public class Complex {
 
     /**
      * Return the complex logarithm log(z).
-     * @param z a complex number
+     * @param z a complex number. If z is zero return (NaN, NaN).
      * @return result of the computation log(z)
-     * TODO: log(0.0) is undefined! How do we deal with this?
      */
     public static Complex log(Complex z) {
         if (z == null)
             throw new IllegalArgumentException("z must not be null in Complex.log");
-        return new Complex(Math.log(abs(z)), arg(z));
+        return (z.x != 0.0 || z.y != 0.0)
+                ? new Complex(Math.log(abs(z)), arg(z))
+                : new Complex(Double.NaN, Double.NaN);
     }
 
     /**
      * Return the complex square root.
      * @param z a complex number
      * @return result of the computation sqrt(z)
-     * TODO: Check the boundary cases!
      */
     public static Complex sqrt(Complex z) {
         if (z == null)
@@ -210,7 +207,7 @@ public class Complex {
         // Note: sqrt(0.0) should return 0.0 but it's not possible to compute
         // it using the formula exp(0.5*log(z)).
         return (z.x > -TOL && z.x < TOL && z.y > -TOL && z.y < TOL)
-            ? new Complex(0.0, 0.0);
+            ? new Complex(0.0, 0.0)
             : Complex.pow(z, new Complex(0.5, 0.0));
     }
 
@@ -242,12 +239,17 @@ public class Complex {
      * Return the complex tangent.
      * @param z a complex number
      * @return result of the computation tan(z)
-     * TODO: How do we handle z equal to 0 + 0i?
+     * Note: If z.x exactly equals 0.5*PI or -0.5*PI the result will be not defined. However,
+     * those values apparently cannot be represented exactly which means that cos(z) is slightly
+     * different from zero and the resulting value of the computation sin(z) / cos(z) is something
+     * pretty big. Hence, we better test for z.x.
      */
     public static Complex tan(Complex z) {
         if (z == null)
             throw new IllegalArgumentException("z must not be null in Complex.tan");
-        return Complex.div(sin(z), cos(z));
+        return (Math.abs(Math.abs(z.x) - 0.5 * Math.PI) < TOL && Math.abs(z.y) < TOL)
+                ? new Complex(Double.NaN, Double.NaN)
+                : Complex.div(Complex.sin(z), Complex.cos(z));
     }
 
 }

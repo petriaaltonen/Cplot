@@ -1,7 +1,5 @@
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import javax.swing.SwingWorker;
 
