@@ -230,7 +230,9 @@ public class MainWindow extends JFrame {
 						return;
 				}
 
-				ImageIO.write(plot.getImage(), "png", file);
+				PlotCoordinates coord = plot.getCoordinates();
+				ImageIO.write(plot.getImage().getSubimage(coord.getLeft(), plot.getCoordinates().getTop(),
+						coord.getViewportWidth(), coord.getViewportHeight()), "png", file);
 			}
 			catch (IOException e) {
 				String msg = new String("Could not save the imsage due to an IO error: " + e.getMessage());

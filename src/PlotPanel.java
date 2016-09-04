@@ -54,9 +54,10 @@ public class PlotPanel extends JPanel {
 
     private Plot plot = null;
 
-    //
-    // Constructor is used to set up event handlers.
-    //
+    /**
+     * Initialize a new PlotPanel.
+     * @param plotRef reference to a Plot-instance held by the MainWindow.
+     */
     public PlotPanel(Plot plotRef) {
 
         super();

@@ -63,6 +63,12 @@ public class PlotCoordinates {
         deltaY = rectViewportCmplx.height / (double)(rectViewport.height - 1);
     }
 
+    /**
+     * Convert from matrix to complex coordinates.
+     * @param x
+     * @param y
+     * @return
+     */
     public Complex matToCmplx(int x, int y) {
         if (!rectMatrix.contains(x, y)) return null;
         Complex z = new Complex();
@@ -71,6 +77,11 @@ public class PlotCoordinates {
         return z;
     }
 
+    /**
+     * Covert from complex to matrix coordinates.
+     * @param z
+     * @return
+     */
     private Point cmplxToMat(Complex z) {
         Point p = new Point();
         p.x = (int)((z.x - rectMatrixCmplx.getMinX()) / deltaX);
@@ -83,22 +94,80 @@ public class PlotCoordinates {
         return p;
     }
 
+    /**
+     * Return the plot xmin values.
+     * @return
+     */
     public double getXmin() { return rectViewportCmplx.getMinX(); }
+
+    /**
+     * Return the plot xmax values.
+     * @return
+     */
     public double getXmax() { return rectViewportCmplx.getMaxX(); }
+
+    /**
+     * Return the plot ymin value.
+     * @return
+     */
     public double getYmin() { return rectViewportCmplx.getMinY(); }
+
+    /**
+     * Return the plot ymax value.
+     * @return
+     */
     public double getYmax() { return rectViewportCmplx.getMaxY(); }
+
+    /**
+     * Return the viewport width.
+     * @return
+     */
     public int getViewportWidth() { return rectViewport.width; }
+
+    /**
+     * Return the viewport height.
+     * @return
+     */
     public int getViewportHeight() { return rectViewport.height; }
+
+    /**
+     * Return the matrix width;
+     * @return
+     */
     public int getMatrixWidth() { return rectMatrix.width; }
+
+    /**
+     * Return the matrix height.
+     * @return
+     */
     public int getMatrixHeight() { return rectMatrix.height; }
+
+    /**
+     * Return viewport left coordinate.
+     * @return
+     */
     public int getLeft() { return rectViewport.x; }
+
+    /**
+     * Return viewport top coordinate.
+     * @return
+     */
     public int getTop() { return rectViewport.y; }
+
+    /**
+     * Return viewport right coordinate.
+     * @return
+     */
     public int getRight() { return (rectViewport.x + rectViewport.width - 1); }
+
+    /**
+     * Return viewport bottom coordinate.
+     * @return
+     */
     public int getBottom() { return (rectViewport.y + rectViewport.height - 1); }
 
     /**
      * Transform viewport integer coordinates to complex coordinates.
-     *
      * @param x the integer x-coordinate
      * @param y the integer y-coordinate
      * @return the complex coordinates
@@ -110,7 +179,6 @@ public class PlotCoordinates {
 
     /**
      * Transform complex coordinates to integer viewport coordinates.
-     *
      * @param z the complex coordinates
      * @return the integer viewport coordinates
      */
@@ -131,7 +199,6 @@ public class PlotCoordinates {
      * Resize the viewport matrix by giving the new width and height values.
      * However, we keep the complex viewport size intact which means the aspect
      * ratio of the plot is likely to change.
-     *
      * @param width new viewport width
      * @param height new viewport height
      */
@@ -162,7 +229,6 @@ public class PlotCoordinates {
 
     /**
      * Reset the x and y-limits of the viewport.
-     *
      * @param xmin viewport xmin
      * @param xmax viewport xmax
      * @param ymin viewport ymin
@@ -191,7 +257,7 @@ public class PlotCoordinates {
     }
 
     /**
-     *
+     * Zoom the viewport.
      * @param x1 upper left x coordinate
      * @param y1 upper left y coordinate
      * @param x2 lower right x coordinate
@@ -205,7 +271,7 @@ public class PlotCoordinates {
     }
 
     /**
-     *
+     * Scan the viewport.
      * @param dx delta x in matrix coordinates
      * @param dy delta y in matrix coordinates
      */
@@ -237,7 +303,8 @@ public class PlotCoordinates {
     }
 
     /**
-     * After scanning the plot and releasing mouse button recompute the matrix.
+     * Called after scanning the plot.
+     * TODO: Better way to do this!
      */
     public void postScanUpdate() {
         rectMatrixCmplx = new Rectangle2D.Double(
