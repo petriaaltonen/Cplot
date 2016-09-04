@@ -3,6 +3,8 @@ import java.util.LinkedList;
 /**
  * Parser takes a mathematical expression and forms an evaluation tree as a result.
  * @author Petri Aaltonen
+ * TODO: Should be reimplemented using the shunting yard algorithm. Scala would probably make the code
+ * much shorther and easier to read.
  */
 public class Parser {
 
@@ -193,6 +195,7 @@ public class Parser {
 	// Assuming that 'statement' starts with a number at index 'k' read
 	// a number of the form xxxx[.yyyyyy][e/E[s]zzz]. The method does not parse
 	// the number but returns it as a string.
+	// TODO: Do this using regular expressions.
 	//
 	private static String readNumber(String statement, int k)
 			throws ParserException {
