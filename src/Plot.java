@@ -102,16 +102,24 @@ public class Plot {
         throw new PlotException("Invalid coloring model");
     }
 
-    //
-    // Resize the matrix.
-    //
+    /**
+     * Resize the matrix.
+     * @param width
+     * @param height
+     */
     public void resize(int width, int height) {
         coordinates.resize(width, height);
         computeMatrix();
     }
-    //
-    // Reset the x and y limits.
-    //
+
+    /**
+     * Reset the x and y limits.
+     * @param xmin must be strictly less than xmax
+     * @param xmax must be strictly greater than xmin
+     * @param ymin must be strictly less than ymax
+     * @param ymax must be strictly greater than ymin
+     * @throws PlotException
+     */
     public void setLimits(double xmin, double xmax, double ymin, double ymax)
             throws PlotException {
 
@@ -119,38 +127,51 @@ public class Plot {
         computeMatrix();
     }
 
-    //
-    // Zoom the plot.
-    //
+    /**
+     * Zoom the plot.
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     */
     public void zoom(int x1, int y1, int x2, int y2) {
         coordinates.zoom(x1, y1, x2, y2);
         computeMatrix();
     }
 
-    //
-    // Scan the plot.
-    //
+    /**
+     * Scan the plot.
+     * @param dx
+     * @param dy
+     */
     public void scan(int dx, int dy) {
         coordinates.scan(dx, dy);
     }
 
-    //
-    // After scanning the plot recompute the matrix.
-    //
+    /**
+     * After scanning the plot, update it.
+     * TODO: Shouldn't Plot do this?
+     */
     public void postScanUpdate() {
         coordinates.postScanUpdate();
         computeMatrix();
     }
 
-    //
-    // Reset the viewport.
-    //
+    /**
+     * Reset the viewport.
+     */
     public void resetViewport() {
         coordinates.reset();
     }
 
+    /**
+     * Start the timer.
+     */
     private void startTimer() { startTime = System.nanoTime(); }
 
+    /**
+     * Stop the timer.
+     */
     private void stopTimer() {
         double time = (System.nanoTime() - startTime) / 1000000.0;
 
@@ -223,40 +244,46 @@ public class Plot {
 
         worker = new PlotWorker(evaluator, activeColoring, coordinates);
 
-        worker.addDoneCallback(new DoneCallback() {
-            @Override
-            public void callback() {
-                try {
-                    plot = workerRef.get();
-                }
-                catch (InterruptedException ex) {
-                    // TODO: Do something about exceptions
-                }
-                catch (ExecutionException ex) {
-                    // TODO: Do something about exceptions
-                }
+        worker.addDoneCallback(ref -> {
+            try {
+                plot = ref.get();
+            }
+            catch (InterruptedException ex) {
+                // TODO: Do something about exceptions
+            }
+            catch (ExecutionException ex) {
+                // TODO: Do something about exceptions
             }
         });
 
         for (DoneCallback c : doneCallbacks) worker.addDoneCallback(c);
         for (ProgressChangedCallback c : progressChangedCallbacks) worker.addProgressChangedCallback(c);
 
-        if (timeIt) {
-            worker.addDoneCallback(new DoneCallback() {
-                @Override
-                public void callback() {
-                    stopTimer();
-                }
-            });
-            startTimer();
-        }
+        if (timeIt)
+            worker.addDoneCallback(ref -> stopTimer());
 
         for (StartCallback c : startCallbacks) c.callback();
         worker.execute();
     }
 
+    /**
+     * Return the plot image.
+     * @return
+     */
     public BufferedImage getImage() { return plot; }
+
+    /**
+     * Return the plot coordinates.
+     * @return
+     */
     public PlotCoordinates getCoordinates() { return coordinates; }
+
+    /**
+     * Return the value of the expression at a given point in the image coordinates.
+     * @param x
+     * @param y
+     * @return
+     */
     public Complex getComplexValue(int x, int y) {
         return evaluator.evalAt(coordinates.getComplexCoordinates(x, y));
     }

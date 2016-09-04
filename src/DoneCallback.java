@@ -1,13 +1,9 @@
 /**
- * A sub-classed DoneCallback-instance is passed to a PlotWorker-thread which
- * calls all DoneCallback-instances' callback()-methods after completing its
- * execution.
+ * Used as a callback just after the computation of a plot has been finished.
  * @author Petri Aaltonen
- * TODO: Turn to a functional interface!
  */
-public abstract class DoneCallback {
+public interface DoneCallback {
 
-    protected PlotWorker workerRef;
-    public abstract void callback();
+    void callback(PlotWorker workerRef);
 
 }

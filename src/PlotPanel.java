@@ -194,12 +194,9 @@ public class PlotPanel extends JPanel {
             }
         });
 
-        plotRef.addDoneCallback(new DoneCallback() {
-            @Override
-            public void callback() {
-                isComputing = false;
-                repaint();
-            }
+        plotRef.addDoneCallback(ref -> {
+            isComputing = false;
+            repaint();
         });
     }
 

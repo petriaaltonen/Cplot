@@ -43,6 +43,9 @@ public class MainWindow extends JFrame {
 	private JMenuItem aboutItem;
 	private HashMap<String, JMenuItem> coloringItems = null;
 
+	// The status bar
+	private StatusBar statusBar;
+
 	/**
 	 * The program has encountered a fatal error which it cannot recover from. Show an error
 	 * message in a message dialog box and print the same message in the standard output
@@ -190,31 +193,14 @@ public class MainWindow extends JFrame {
 	 */
 	private void createStatusBar() {
 
-		StatusBar statusBar = new StatusBar();
+		statusBar = new StatusBar();
 		getContentPane().add(statusBar, BorderLayout.SOUTH);
 		statusBar.setExpression(DEFAULT_EXPRESSION);
 		statusBar.setProgressBarVisibility(false);
 
-		plot.addProgressChangedCallback(new ProgressChangedCallback() {
-			@Override
-			public void callback(int progress) {
-				statusBar.setProgressBarValue(progress);
-			}
-		});
-
-		plot.addStartCallback(new StartCallback() {
-			@Override
-			public void callback() {
-				statusBar.setProgressBarVisibility(true);
-			}
-		});
-
-		plot.addDoneCallback(new DoneCallback() {
-			@Override
-			public void callback() {
-				statusBar.setProgressBarVisibility(false);
-			}
-		});
+		plot.addStartCallback(() -> statusBar.setProgressBarVisibility(true));
+		plot.addProgressChangedCallback(progress -> statusBar.setProgressBarValue(progress));
+		plot.addDoneCallback(ref -> statusBar.setProgressBarVisibility(false));
 	}
 
 	/**
@@ -266,6 +252,7 @@ public class MainWindow extends JFrame {
 	private void onNewPlotMenuItemClick() {
 		NewPlotWindow plotWindow = new NewPlotWindow(plot.listColoring());
 		plotWindow.registerCallback(params -> {
+			statusBar.setExpression(params.expression);
 			plot(params);
 		});
 	}

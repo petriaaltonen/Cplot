@@ -1,13 +1,9 @@
 /**
- * A sub-classed StartCallback-instance is passed to a Plot-instance which
- * calls all StartCallback-instances' callback()-methods before starting 
- * computing a plot.
+ * Used as a callback just before the computation of a plot begins.
  * @author Petri Aaltonen
- * TODO: Consider turning to a functional interface.
  */
-public abstract class StartCallback {
+public interface StartCallback {
 
-    protected PlotWorker workerRef;
-    public abstract void callback();
+    void callback();
 
 }

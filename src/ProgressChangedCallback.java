@@ -1,9 +1,10 @@
 /**
+ * Used as a callback in the middle of computing a plot to indicate the progress of
+ * computation.
  * @author Petri Aaltonen
- * TODO: Consider turning this into a functional interface.
  */
-public abstract class ProgressChangedCallback {
+public interface ProgressChangedCallback {
 
-    public abstract void callback(int progress);
+    void callback(int progress);
 
 }

@@ -15,6 +15,12 @@ public class PlotWorker extends SwingWorker<BufferedImage, Void> {
     private ArrayList<DoneCallback> doneCallbacks;
     private ArrayList<ProgressChangedCallback> progressChangedCallbacks;
 
+    /**
+     * Initialize a new worker thread.
+     * @param evaluator
+     * @param coloring
+     * @param coordinates
+     */
     public PlotWorker(Evaluator evaluator, Coloring coloring, PlotCoordinates coordinates) {
         super();
         this.evaluator = evaluator;
@@ -24,15 +30,26 @@ public class PlotWorker extends SwingWorker<BufferedImage, Void> {
         progressChangedCallbacks = new ArrayList<>(4);
     }
 
+    /**
+     * Register a new callback which is called when the worker has finished.
+     * @param callback
+     */
     public void addDoneCallback(DoneCallback callback) {
-        callback.workerRef = this;
         doneCallbacks.add(callback);
     }
 
+    /**
+     * Register a new callback which is called when the worker's progress has been updated.
+     * @param callback
+     */
     public void addProgressChangedCallback(ProgressChangedCallback callback) {
         progressChangedCallbacks.add(callback);
     }
 
+    /**
+     * This is where the heavy number crunching is made.
+     * @return
+     */
     @Override
     public BufferedImage doInBackground() {
         BufferedImage img = new BufferedImage(
@@ -49,7 +66,9 @@ public class PlotWorker extends SwingWorker<BufferedImage, Void> {
                 Complex u = coordinates.matToCmplx(x, y);
                 if (u != null) {
                     Complex z = evaluator.evalAt(u);
-                    Color rgb = coloring.getColor(z);
+                    Color rgb = !Double.isNaN(z.x) && !Double.isNaN(z.y)
+                            ? coloring.getColor(z)
+                            : new Color(255, 255, 255);
                     int c = rgb.getRed() << 16 | rgb.getGreen() << 8 | rgb.getBlue();
                     img.setRGB(x, y, c);
                     ++progressed;
@@ -64,10 +83,13 @@ public class PlotWorker extends SwingWorker<BufferedImage, Void> {
         return img;
     }
 
+    /**
+     * Executes when the computation is ready.
+     */
     @Override
     protected void done() {
         if (!isCancelled())
-            for (DoneCallback c : doneCallbacks) c.callback();
+            for (DoneCallback c : doneCallbacks) c.callback(this);
     }
 
 }
