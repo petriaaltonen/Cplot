@@ -1,0 +1,67 @@
+Copyright (C) 2016  Petri Aaltonen
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/
+
+
+About the program
+
+This program is used to make domain plot images of complex-argument, complex-valued
+functions.
+
+The program is distributed as source code files, LICENCE and this README file. The user
+may choose to build the program using any method they prefer. Note that the program depends
+on the external libraries junit-4.12 and hamcrest-core-1.3 for unit testing.
+
+
+About using the program
+
+The user can give the program a mathematical expression which consists of a variable z,
+predefined constants, numeric values, operators +, -, * and /, parentheses and function calls.
+
+At the moment the only supported predefined constant is the imaginary number i.
+
+As for now the following one-argument mathematical functions are supported:
+ - arg the complex argument
+ - conj the complex conjugate
+ - cos the complex cosine
+ - exp the complex exponential
+ - im the imaginary part
+ - log the complex logarithm
+ - re the real part
+ - sin the complex sine
+ - sqrt the complex square root
+ - tan the complex tangent
+
+ Because only one-argument functions are supported one has to implement the complex power
+ function oneself. Any future rewriting of the parser may change the situation. The parser
+ the program uses now is an ad-hoc solution which work fine but would better be replaces
+ with one based on the shunting-yard algorithm to facilitate easier modifying. It would
+ probably help to implement the new parser in Scala.
+
+ The following are examples of valid expressions:
+
+ z
+ z / (z - i)
+ sin(z)
+ log(z*z)
+
+ The user can choose from different coloring schemes. The two basic types of coloring
+ schemes are the color-wheel and red-yellow-black. Colors are used to represent
+ the argument of the complex value. Further one can choose to use a coloring scheme with
+ steps which means that the brightness of the color is computed using the formula
+
+ Math.log(Complex.abs(z)) - (double)Math.floor(Math.log(Complex.abs(z)))
+
+ Further one can choose to use a color-wheel coloring scheme with axes. This helps to
+ visualize where the argument of the complex function value is 0, 0.5*PI, PI or -0.5*PI.

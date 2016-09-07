@@ -1,3 +1,20 @@
+/*
+    Copyright (C) 2016  Petri Aaltonen
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see http://www.gnu.org/licenses/
+ */
+
 import java.io.*;
 import javax.swing.*;
 import java.awt.*;
@@ -39,8 +56,8 @@ public class MainWindow extends JFrame {
 	private JCheckBoxMenuItem boxItem;
 	private JCheckBoxMenuItem crosshairItem;
 	private JCheckBoxMenuItem toolTipItem;
-	private JMenu helpMenu;
-	private JMenuItem aboutItem;
+	//private JMenu helpMenu;
+	//private JMenuItem aboutItem;
 	private HashMap<String, JMenuItem> coloringItems = null;
 
 	// The status bar
@@ -177,13 +194,13 @@ public class MainWindow extends JFrame {
 		toolTipItem.setState(true);
 		plotMenu.add(toolTipItem);
 
-		helpMenu = new JMenu("Help");
-		aboutItem = new JMenuItem("About");
-		helpMenu.add(aboutItem);
+		//helpMenu = new JMenu("Help");
+		//aboutItem = new JMenuItem("About");
+		//helpMenu.add(aboutItem);
 
 		menuBar.add(fileMenu);
 		menuBar.add(plotMenu);
-		menuBar.add(helpMenu);
+		//menuBar.add(helpMenu);
 
 		setJMenuBar(menuBar);
 	}
