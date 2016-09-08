@@ -137,9 +137,7 @@ public class Plot {
      * @param ymax must be strictly greater than ymin
      * @throws PlotException
      */
-    public void setLimits(double xmin, double xmax, double ymin, double ymax)
-            throws PlotException {
-
+    public void setLimits(double xmin, double xmax, double ymin, double ymax) throws PlotException {
         coordinates.setLimits(xmin, xmax, ymin, ymax);
         computeMatrix();
     }
@@ -248,10 +246,10 @@ public class Plot {
                 plot = ref.get();
             }
             catch (InterruptedException ex) {
-                // TODO: Do something about exceptions
+                MainWindow.bailOut(ex);
             }
             catch (ExecutionException ex) {
-                // TODO: Do something about exceptions
+                MainWindow.bailOut(ex);
             }
         });
 

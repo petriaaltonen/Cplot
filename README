@@ -19,9 +19,14 @@ About the program
 This program is used to make domain plot images of complex-argument, complex-valued
 functions.
 
-The program is distributed as source code files, LICENCE and this README file. The user
-may choose to build the program using any method they prefer. Note that the program depends
-on the external libraries junit-4.12 and hamcrest-core-1.3 for unit testing.
+The program is distributed as source code files, an ant-build file, LICENCE, README and
+IntelliJ IDEA project files which one may feel free to ignore.
+
+The user may choose to build the program using any method they prefer. A simple ant-file
+is provided to build an executable jar-file.
+
+Note that the package tests depends on the external libraries junit-4.12 and hamcrest-core-1.3
+for unit testing.
 
 
 About using the program
