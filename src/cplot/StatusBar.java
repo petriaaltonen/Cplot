@@ -29,7 +29,8 @@ public class StatusBar extends JPanel {
     private final int PREFERREX_XSIZE = 10;
     private final int PREFERRED_YSIZE = 23;
 
-    private JLabel label;
+    private JLabel expressionLabel;
+    private JLabel timeLabel;
     private JProgressBar progressBar;
 
     /**
@@ -38,11 +39,10 @@ public class StatusBar extends JPanel {
     public StatusBar() {
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(PREFERREX_XSIZE, PREFERRED_YSIZE));
-        label = new JLabel();
-        add(label, BorderLayout.WEST);
+        expressionLabel = new JLabel();
+        timeLabel = new JLabel();
+        add(expressionLabel, BorderLayout.WEST);
         progressBar = new JProgressBar(0, 100);
-        progressBar.setVisible(false);
-        add(progressBar, BorderLayout.EAST);
     }
 
     /**
@@ -51,15 +51,27 @@ public class StatusBar extends JPanel {
      */
     public void setExpression(String eq) {
         assert eq != null;
-        label.setText(eq);
+        expressionLabel.setText(eq);
     }
 
     /**
-     * Show or hide the proress bar in the right side of the status bar.
-     * @param visible
+     * Show or hide the progress bar in the right side of the status bar. When the progress bar is not visible
+     * we show the elapsed time instead.
+     * @param visible true if the progress bar should be visible
      */
     public void setProgressBarVisibility(boolean visible) {
-        progressBar.setVisible(visible);
+        if (visible) {
+            timeLabel.setVisible(false);
+            remove(timeLabel);
+            add(progressBar, BorderLayout.EAST);
+            progressBar.setVisible(true);
+        }
+        else {
+            progressBar.setVisible(false);
+            remove(progressBar);
+            add(timeLabel, BorderLayout.EAST);
+            timeLabel.setVisible(true);
+        }
     }
 
     /**
@@ -69,6 +81,14 @@ public class StatusBar extends JPanel {
     public void setProgressBarValue(int value) {
         assert value >= 0 && value <= 100;
         progressBar.setValue(value);
+    }
+
+    /**
+     * Set the time which is shown in the right side of the status bar when the computation is complete.
+     * @param time time in milliseconds
+     */
+    public void setTime(double time) {
+        timeLabel.setText("Computation took " + Double.toString(time) + " ms");
     }
 
 }

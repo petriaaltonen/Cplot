@@ -43,7 +43,7 @@ public class Evaluator {
 
 		@Override
 		public Complex eval() throws EvaluateException {
-			return value;//new Complex(value);
+			return value;
 		}
 	}
 
@@ -56,7 +56,7 @@ public class Evaluator {
 
 		@Override
 		public Complex eval() throws EvaluateException {
-			return varTable.get(name);//new Complex(varTable.get(name));
+			return varTable.get(name);
 		}
 	}
 
@@ -243,14 +243,10 @@ public class Evaluator {
 			varTable.set("z", z);
 			return evalRoot.eval();
 		} catch (EvaluateException e) {
-			// This should never happen if the logic is programmed
-			// correctly. Ie. no user input should cause this line to
-			// ever be executed.
-			assert false : "Evaluator.evalAt exception should not be raised";
-			System.out.print("Evaluator.evalAt failed because of an "
-					+ "EvaluateException with message " + e.getMessage());
-			System.exit(-1);
-			return null;
+			// This is a programming error, should never happend due to user input.
+			assert false : "Evaluator.evalAt exception should never be caught.";
+			MainWindow.bailOut(e);
+            return null;
 		}
 	}
 

@@ -17,6 +17,7 @@
 
 package cplot;
 
+import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
@@ -56,12 +57,9 @@ public class Plot {
     private ArrayList<DoneCallback> doneCallbacks = null;
     private ArrayList<ProgressChangedCallback> progressChangedCallbacks = null;
 
-    // Variables used in logging.
-    private boolean timeIt = true;
-    private File logFile = null;
-    private FileWriter logWriter = null;
-    private long startTime = 0;
-    private String expression = "";
+    // Variables used in measuring the time to make the computation.
+    private long startTime;
+    private double elapsedTime;
 
     /**
      * Initialize and provide a reference to an Evaluator instance.
@@ -186,41 +184,23 @@ public class Plot {
     /**
      * Start the timer.
      */
-    private void startTimer() { startTime = System.nanoTime(); }
+    private void startTimer() {
+        startTime = System.nanoTime();
+    }
 
     /**
      * Stop the timer.
      */
     private void stopTimer() {
-        double time = (System.nanoTime() - startTime) / 1000000.0;
+        elapsedTime = (System.nanoTime() - startTime) / 1.0e6;
+    }
 
-        String fName = new String("log");
-        if (logFile == null) {
-            logFile = new File(fName);
-            try {
-                logWriter = new FileWriter(logFile);
-            }
-            catch (IOException e) {
-                // TODO
-            }
-        }
-
-        // If expression is uninitialized it means we just created the Plot-instance
-        // with no contents yet to plot.
-        if (expression == null) return;
-
-        try {
-            logWriter.write("Expression: " + expression + "\n");
-            logWriter.write("Matrix width: " + coordinates.getMatrixWidth() + "\n");
-            logWriter.write("Matrix height: " + coordinates.getMatrixHeight() + "\n");
-            logWriter.write("Coloring: " + activeColoring.getName() + "\n");
-            logWriter.write("Time (ms): " + time + "\n");
-            logWriter.write("\n");
-            logWriter.flush();
-        }
-        catch (IOException e) {
-            // TODO
-        }
+    /**
+     * Return the time it took to make the previous computation.
+     * @return time in milliseconds
+     */
+    public double getElapsedTime() {
+        return elapsedTime;
     }
 
     /**
@@ -275,13 +255,13 @@ public class Plot {
             }
         });
 
+        worker.addDoneCallback(ref -> stopTimer()); // Must do this before adding other callbacks to ensure
+        // that timer-data is available.
         for (DoneCallback c : doneCallbacks) worker.addDoneCallback(c);
         for (ProgressChangedCallback c : progressChangedCallbacks) worker.addProgressChangedCallback(c);
-
-        if (timeIt)
-            worker.addDoneCallback(ref -> stopTimer());
-
         for (StartCallback c : startCallbacks) c.callback();
+
+        startTimer();
         worker.execute();
     }
 
@@ -289,13 +269,17 @@ public class Plot {
      * Return the plot image.
      * @return
      */
-    public BufferedImage getImage() { return plot; }
+    public BufferedImage getImage() {
+        return plot;
+    }
 
     /**
      * Return the plot coordinates.
      * @return
      */
-    public PlotCoordinates getCoordinates() { return coordinates; }
+    public PlotCoordinates getCoordinates() {
+        return coordinates;
+    }
 
     /**
      * Return the value of the expression at a given point in the image coordinates.

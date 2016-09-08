@@ -93,11 +93,8 @@ public class MainWindow extends JFrame {
 		setSize(DEFAULT_XSIZE, DEFAULT_YSIZE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		parser = new Parser();
+        // Create an evaluator and a new plot. Do not plot anything yet.
 		evaluator = new Evaluator();
-		try { evaluator.setRoot(parser.parseStatement(DEFAULT_EXPRESSION)); }
-		catch (ParserException e) { bailOut(e); }
-
 		plot = new Plot(evaluator);
 
 		// Create a FileChooser-instance.
@@ -117,6 +114,10 @@ public class MainWindow extends JFrame {
 		panel = new PlotPanel(plot);
 		getContentPane().add(panel);
 		setVisible(true);
+
+        parser = new Parser();
+        try { evaluator.setRoot(parser.parseStatement(DEFAULT_EXPRESSION)); }
+        catch (ParserException e) { bailOut(e); }
 
 		try { panel.updateBackgroundImage(); }
 		catch (PlotException e) { bailOut(e); }
@@ -219,7 +220,10 @@ public class MainWindow extends JFrame {
 
 		plot.addStartCallback(() -> statusBar.setProgressBarVisibility(true));
 		plot.addProgressChangedCallback(progress -> statusBar.setProgressBarValue(progress));
-		plot.addDoneCallback(ref -> statusBar.setProgressBarVisibility(false));
+		plot.addDoneCallback(ref -> {
+            statusBar.setProgressBarVisibility(false);
+            statusBar.setTime(plot.getElapsedTime());
+        });
 	}
 
 	/**
@@ -254,7 +258,7 @@ public class MainWindow extends JFrame {
 						coord.getViewportWidth(), coord.getViewportHeight()), "png", file);
 			}
 			catch (IOException e) {
-				String msg = new String("Could not save the imsage due to an IO error: " + e.getMessage());
+				String msg = new String("Could not save the image due to an IO error: " + e.getMessage());
 				JOptionPane.showMessageDialog(this, msg, "Could not save image", JOptionPane.ERROR_MESSAGE);
 			}
 		}

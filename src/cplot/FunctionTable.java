@@ -45,10 +45,8 @@ public class FunctionTable {
 			set("cos", new Cos());
 			set("tan", new Tan());
 		} catch (EvaluateException e) {
-			assert false : "FunctionTable.FunctionTable exception should not be raised";
-			System.out.print("FunctionTable constructor failed because of an "
-					+ "EvaluateException with message " + e.getMessage());
-			System.exit(-1);
+			assert false : "FunctionTable.FunctionTable exception should never be caught.";
+			MainWindow.bailOut(e);
 		}
 	}
 
@@ -70,12 +68,8 @@ public class FunctionTable {
      */
 	public Function get(String name) throws EvaluateException {
 		Function fcn = map.get(name);
-		if (fcn == null) {
-			StringBuilder s = new StringBuilder();
-			s.append("FunctionTable contains no function ");
-			s.append(name);
-			throw new EvaluateException(s.toString());
-		}
+		if (fcn == null)
+			throw new EvaluateException("Function table contains no function " + name);
 		return fcn;
 	}
 
