@@ -16,7 +16,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/
 
 About the program
 
-This program is used to make domain plot images of complex-argument, complex-valued
+This program is used to make domain coloring plots of complex-argument, complex-valued
 functions.
 
 The program is distributed as source code files, an ant-build file, LICENCE, README and
